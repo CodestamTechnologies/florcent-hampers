@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/providers/authProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
+import { ProductsProvider } from "@/providers/productsProvider";
 
 export default function RootLayout({
   children,
@@ -13,7 +14,11 @@ export default function RootLayout({
         className={` antialiased`}
       >
         <AuthProvider>
-          {children}
+          <ProductsProvider>
+
+            {children}
+
+          </ProductsProvider>
           <Toaster />
         </AuthProvider>
       </body>

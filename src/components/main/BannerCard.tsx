@@ -3,9 +3,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { categories, Category, collections, Product, products } from '@/data'; // Adjust the import path as necessary
+import { categories, Category, collections, Product } from '@/data'; // Adjust the import path as necessary
 import { useAuth } from "@/providers/authProvider";
 import { useCart } from "@/providers/cartProvider";
+import { useProducts } from "@/providers/productsProvider";
 import {
     Gift,
     Heart,
@@ -20,6 +21,7 @@ import { useState } from "react";
 
 const MainComponent = () => {
     const { addToCart, openQuickView, addToFavorites, removeFromFavorites, favorites } = useCart();
+    const { products } = useProducts();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     // Function to calculate discounted price
@@ -42,7 +44,7 @@ const MainComponent = () => {
             <Card key={product.id} className="overflow-hidden group h-full p-0 flex flex-col">
                 <div className="relative">
                     <img
-                        src={'https://maxm-imggenurl.web.val.run/' + product.title}
+                        src={product.images[0] || 'https://maxm-imggenurl.web.val.run/' + product.title}
                         alt={product.title}
                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                     />
