@@ -22,10 +22,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from 'next/link';
 import { useCart } from '@/providers/cartProvider';
 import { useAuth } from '@/providers/authProvider';
+import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
     const { cartCount, favoritesCount } = useCart();
     const { openLoginModal } = useAuth();
+    const router = useRouter();
+
     const categories = [
         {
             name: "Home",
@@ -85,11 +88,13 @@ const Sidebar = () => {
             name: "Favorites",
             icon: <Heart className="h-4 w-4 mr-2" />,
             count: favoritesCount,
+            onClick : () => router.push('/favourites')
         },
         {
             name: "My Cart",
             icon: <ShoppingCart className="h-4 w-4 mr-2" />,
             count: cartCount,
+            onClick: () => router.push('/cart')
         },
         {
             name: "Account",

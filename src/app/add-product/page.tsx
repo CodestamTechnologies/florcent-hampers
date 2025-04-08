@@ -6,7 +6,7 @@ import { Product, categories, collections } from "@/data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { db } from "@/lib/firebase";
 
 // Dummy file upload function
@@ -59,28 +59,41 @@ const AddProduct = () => {
     const [subCatDescription, setSubCatDescription] = useState("");
     const [subCatImageFile, setSubCatImageFile] = useState<File | null>(null);
 
-    const [uploading, setUploading] = useState(false);
+    // Loading states
+    const [isLoadingData, setIsLoadingData] = useState(true);
+    const [isAddingColor, setIsAddingColor] = useState(false);
+    const [isAddingSubCategory, setIsAddingSubCategory] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     // Fetch colors and sub-collections from Firestore
     useEffect(() => {
         const fetchData = async () => {
-            const colorsSnapshot = await getDocs(collection(db, "colors"));
-            const colorsData = colorsSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                name: doc.data().name,
-                value: doc.data().value,
-            })) as Color[];
-            setDbColors(colorsData);
+            setIsLoadingData(true);
+            try {
+                const colorsSnapshot = await getDocs(collection(db, "colors"));
+                const colorsData = colorsSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    name: doc.data().name as string,
+                    value: doc.data().value as string,
+                }));
+                setDbColors(colorsData);
 
-            const subCollectionsSnapshot = await getDocs(collection(db, "subCollections"));
-            const subCollectionsData = subCollectionsSnapshot.docs.map((doc) => ({
-                id: doc.id,
-                name: doc.data().name,
-                description: doc.data().description,
-                image: doc.data().image || "",
-            })) as SubCategory[];
-            setDbSubCollections(subCollectionsData);
+                const subCollectionsSnapshot = await getDocs(collection(db, "subCollections"));
+                const subCollectionsData = subCollectionsSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    name: doc.data().name as string,
+                    description: doc.data().description as string,
+                    image: (doc.data().image as string) || "",
+                }));
+                setDbSubCollections(subCollectionsData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setErrors((prev) => ({ ...prev, fetch: "Failed to load data" }));
+            } finally {
+                setIsLoadingData(false);
+            }
         };
         fetchData();
     }, []);
@@ -153,14 +166,22 @@ const AddProduct = () => {
             setErrors((prev) => ({ ...prev, colorName: colorError }));
             return;
         }
-        const newColor = { name: colorName.trim(), value: colorValue };
-        const docRef = await addDoc(collection(db, "colors"), newColor);
-        const updatedColor: Color = { id: docRef.id, ...newColor };
-        setDbColors([...dbColors, updatedColor]);
-        setColors([...colors, updatedColor]);
-        setColorName("");
-        setColorValue("#000000");
-        setErrors((prev) => ({ ...prev, colorName: "" }));
+        setIsAddingColor(true);
+        try {
+            const newColor = { name: colorName.trim(), value: colorValue };
+            const docRef = await addDoc(collection(db, "colors"), newColor);
+            const updatedColor: Color = { id: docRef.id, ...newColor };
+            setDbColors([...dbColors, updatedColor]);
+            setColors([...colors, updatedColor]);
+            setColorName("");
+            setColorValue("#000000");
+            setErrors((prev) => ({ ...prev, colorName: "" }));
+        } catch (error) {
+            console.error("Error adding color:", error);
+            setErrors((prev) => ({ ...prev, colorName: "Failed to add color" }));
+        } finally {
+            setIsAddingColor(false);
+        }
     };
 
     const handleSelectColor = (colorId: string) => {
@@ -184,21 +205,29 @@ const AddProduct = () => {
             setErrors((prev) => ({ ...prev, subCatName: subCatError }));
             return;
         }
-        let imageUrl = "";
-        if (subCatImageFile) imageUrl = await uploadFile(subCatImageFile);
-        const newSubCat = {
-            name: subCatName.trim(),
-            description: subCatDescription.trim(),
-            image: imageUrl,
-        };
-        const docRef = await addDoc(collection(db, "subCollections"), newSubCat);
-        const updatedSubCat: SubCategory = { id: docRef.id, ...newSubCat };
-        setDbSubCollections([...dbSubCollections, updatedSubCat]);
-        setSubCategories([...subCategories, updatedSubCat]);
-        setSubCatName("");
-        setSubCatDescription("");
-        setSubCatImageFile(null);
-        setErrors((prev) => ({ ...prev, subCatName: "", subCategories: "" }));
+        setIsAddingSubCategory(true);
+        try {
+            let imageUrl = "";
+            if (subCatImageFile) imageUrl = await uploadFile(subCatImageFile);
+            const newSubCat = {
+                name: subCatName.trim(),
+                description: subCatDescription.trim(),
+                image: imageUrl,
+            };
+            const docRef = await addDoc(collection(db, "subCollections"), newSubCat);
+            const updatedSubCat: SubCategory = { id: docRef.id, ...newSubCat };
+            setDbSubCollections([...dbSubCollections, updatedSubCat]);
+            setSubCategories([...subCategories, updatedSubCat]);
+            setSubCatName("");
+            setSubCatDescription("");
+            setSubCatImageFile(null);
+            setErrors((prev) => ({ ...prev, subCatName: "", subCategories: "" }));
+        } catch (error) {
+            console.error("Error adding sub-category:", error);
+            setErrors((prev) => ({ ...prev, subCatName: "Failed to add sub-collection" }));
+        } finally {
+            setIsAddingSubCategory(false);
+        }
     };
 
     const handleSelectSubCategory = (subCatId: string) => {
@@ -210,9 +239,9 @@ const AddProduct = () => {
     };
 
     const handleRemoveSubCategory = (index: number) => {
-        const newstk = subCategories.filter((_, i) => i !== index);
-        setSubCategories(newstk);
-        if (newstk.length === 0) setErrors((prev) => ({ ...prev, subCategories: "At least one sub-collection is required" }));
+        const newSubCats = subCategories.filter((_, i) => i !== index);
+        setSubCategories(newSubCats);
+        if (newSubCats.length === 0) setErrors((prev) => ({ ...prev, subCategories: "At least one sub-collection is required" }));
     };
 
     // Form submission
@@ -220,7 +249,7 @@ const AddProduct = () => {
         e.preventDefault();
         if (!validateForm()) return;
 
-        setUploading(true);
+        setIsSubmitting(true);
         try {
             const productImageUrls: string[] = [];
             if (productImageFiles) {
@@ -270,30 +299,45 @@ const AddProduct = () => {
             console.error("Error adding product:", error);
             alert("There was an error adding your product. Please try again.");
         } finally {
-            setUploading(false);
+            setIsSubmitting(false);
         }
     };
+
+    // Render loading state for initial data fetch
+    if (isLoadingData) {
+        return (
+            <div className="p-4 max-w-4xl mx-auto text-center">
+                <p className="text-lg">Loading data...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="p-4 max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
+            {errors.fetch && <p className="text-red-500 text-sm mb-4">{errors.fetch}</p>}
             <form onSubmit={handleSubmit}>
                 {/* Title */}
                 <div className="mb-4">
-                    <label htmlFor="title" className="block mb-1 font-medium">Title:</label>
+                    <label htmlFor="title" className="block mb-1 font-medium">
+                        Title:
+                    </label>
                     <Input
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         maxLength={50}
                         placeholder="Max 50 characters"
+                        disabled={isSubmitting}
                     />
                     {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
                 </div>
 
                 {/* Description */}
                 <div className="mb-4">
-                    <label htmlFor="description" className="block mb-1 font-medium">Description:</label>
+                    <label htmlFor="description" className="block mb-1 font-medium">
+                        Description:
+                    </label>
                     <Textarea
                         id="description"
                         value={description}
@@ -301,6 +345,7 @@ const AddProduct = () => {
                         maxLength={500}
                         placeholder="Max 500 characters"
                         rows={4}
+                        disabled={isSubmitting}
                     />
                     {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
                 </div>
@@ -308,22 +353,28 @@ const AddProduct = () => {
                 {/* Price and Discount */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                     <div>
-                        <label htmlFor="priceBeforeDiscount" className="block mb-1 font-medium">Price:</label>
+                        <label htmlFor="priceBeforeDiscount" className="block mb-1 font-medium">
+                            Price:
+                        </label>
                         <Input
                             id="priceBeforeDiscount"
                             value={priceBeforeDiscount}
                             onChange={(e) => setPriceBeforeDiscount(e.target.value)}
                             placeholder="e.g., 99.99"
+                            disabled={isSubmitting}
                         />
                         {errors.priceBeforeDiscount && <p className="text-red-500 text-sm">{errors.priceBeforeDiscount}</p>}
                     </div>
                     <div>
-                        <label htmlFor="discount" className="block mb-1 font-medium">Discount (%):</label>
+                        <label htmlFor="discount" className="block mb-1 font-medium">
+                            Discount (%):
+                        </label>
                         <Input
                             id="discount"
                             value={discount}
                             onChange={(e) => setDiscount(e.target.value)}
                             placeholder="e.g., 10 (0-100)"
+                            disabled={isSubmitting}
                         />
                         {errors.discount && <p className="text-red-500 text-sm">{errors.discount}</p>}
                     </div>
@@ -331,12 +382,15 @@ const AddProduct = () => {
 
                 {/* Tags */}
                 <div className="mb-4">
-                    <label htmlFor="tags" className="block mb-1 font-medium">Tags (comma separated):</label>
+                    <label htmlFor="tags" className="block mb-1 font-medium">
+                        Tags (comma separated):
+                    </label>
                     <Input
                         id="tags"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
                         placeholder="e.g., new, summer (max 5, 20 chars each)"
+                        disabled={isSubmitting}
                     />
                     {errors.tags && <p className="text-red-500 text-sm">{errors.tags}</p>}
                 </div>
@@ -344,24 +398,36 @@ const AddProduct = () => {
                 {/* Category and Collection */}
                 <div className="mb-4 grid grid-cols-2 gap-4">
                     <div>
-                        <label htmlFor="category" className="block mb-1 font-medium">Category:</label>
-                        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                            <SelectTrigger>{selectedCategory ? categories.find((cat) => cat.id === selectedCategory)?.name : "Select Category"}</SelectTrigger>
+                        <label htmlFor="category" className="block mb-1 font-medium">
+                            Category:
+                        </label>
+                        <Select value={selectedCategory} onValueChange={setSelectedCategory} disabled={isSubmitting}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Category" />
+                            </SelectTrigger>
                             <SelectContent>
                                 {categories.map((cat) => (
-                                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                                    <SelectItem key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                         {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
                     </div>
                     <div>
-                        <label htmlFor="collection" className="block mb-1 font-medium">Collection:</label>
-                        <Select value={selectedCollection} onValueChange={setSelectedCollection}>
-                            <SelectTrigger>{selectedCollection ? collections.find((col) => col.id === selectedCollection)?.name : "Select Collection"}</SelectTrigger>
+                        <label htmlFor="collection" className="block mb-1 font-medium">
+                            Collection:
+                        </label>
+                        <Select value={selectedCollection} onValueChange={setSelectedCollection} disabled={isSubmitting}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Collection" />
+                            </SelectTrigger>
                             <SelectContent>
                                 {collections.map((col) => (
-                                    <SelectItem key={col.id} value={col.id}>{col.name}</SelectItem>
+                                    <SelectItem key={col.id} value={col.id}>
+                                        {col.name}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -371,8 +437,10 @@ const AddProduct = () => {
 
                 {/* Product Images */}
                 <div className="mb-4">
-                    <label htmlFor="productImages" className="block mb-1 font-medium">Upload Product Images:</label>
-                    <Input id="productImages" type="file" multiple onChange={handleProductImageChange} />
+                    <label htmlFor="productImages" className="block mb-1 font-medium">
+                        Upload Product Images:
+                    </label>
+                    <Input id="productImages" type="file" multiple onChange={handleProductImageChange} disabled={isSubmitting} />
                     {errors.images && <p className="text-red-500 text-sm">{errors.images}</p>}
                 </div>
 
@@ -380,11 +448,15 @@ const AddProduct = () => {
                 <fieldset className="mb-4 border p-4">
                     <legend className="font-bold">Colors</legend>
                     <div className="flex gap-4 items-center my-2">
-                        <Select onValueChange={handleSelectColor}>
-                            <SelectTrigger>Select Existing Color</SelectTrigger>
+                        <Select onValueChange={handleSelectColor} disabled={isAddingColor || isSubmitting}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Existing Color" />
+                            </SelectTrigger>
                             <SelectContent>
                                 {dbColors.map((color) => (
-                                    <SelectItem key={color.id} value={color.id}>{color.name}</SelectItem>
+                                    <SelectItem key={color.id} value={color.id}>
+                                        {color.name}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -395,9 +467,18 @@ const AddProduct = () => {
                             onChange={(e) => setColorName(e.target.value)}
                             maxLength={20}
                             className="w-1/2"
+                            disabled={isAddingColor || isSubmitting}
                         />
-                        <Input type="color" value={colorValue} onChange={(e) => setColorValue(e.target.value)} className="w-16 p-0" />
-                        <Button type="button" onClick={handleAddColor}>Add New Color</Button>
+                        <Input
+                            type="color"
+                            value={colorValue}
+                            onChange={(e) => setColorValue(e.target.value)}
+                            className="w-16 p-0"
+                            disabled={isAddingColor || isSubmitting}
+                        />
+                        <Button type="button" onClick={handleAddColor} disabled={isAddingColor || isSubmitting}>
+                            {isAddingColor ? "Adding..." : "Add New Color"}
+                        </Button>
                     </div>
                     {errors.colorName && <p className="text-red-500 text-sm">{errors.colorName}</p>}
                     {errors.colors && <p className="text-red-500 text-sm">{errors.colors}</p>}
@@ -406,8 +487,23 @@ const AddProduct = () => {
                             {colors.map((color, index) => (
                                 <li key={index} className="flex items-center gap-2">
                                     {color.name}
-                                    <span style={{ backgroundColor: color.value, width: "16px", height: "16px", display: "inline-block", borderRadius: "4px" }}></span>
-                                    <Button variant="destructive" size="sm" onClick={() => handleRemoveColor(index)}>Remove</Button>
+                                    <span
+                                        style={{
+                                            backgroundColor: color.value,
+                                            width: "16px",
+                                            height: "16px",
+                                            display: "inline-block",
+                                            borderRadius: "4px",
+                                        }}
+                                    ></span>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => handleRemoveColor(index)}
+                                        disabled={isSubmitting}
+                                    >
+                                        Remove
+                                    </Button>
                                 </li>
                             ))}
                         </ul>
@@ -418,11 +514,15 @@ const AddProduct = () => {
                 <fieldset className="mb-4 border p-4">
                     <legend className="font-bold">Sub-Collections</legend>
                     <div className="mb-2">
-                        <Select onValueChange={handleSelectSubCategory}>
-                            <SelectTrigger>Select Existing Sub-Collection</SelectTrigger>
+                        <Select onValueChange={handleSelectSubCategory} disabled={isAddingSubCategory || isSubmitting}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select Existing Sub-Collection" />
+                            </SelectTrigger>
                             <SelectContent>
                                 {dbSubCollections.map((subCat) => (
-                                    <SelectItem key={subCat.id} value={subCat.id}>{subCat.name}</SelectItem>
+                                    <SelectItem key={subCat.id} value={subCat.id}>
+                                        {subCat.name}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -433,6 +533,7 @@ const AddProduct = () => {
                             onChange={(e) => setSubCatName(e.target.value)}
                             maxLength={30}
                             className="mb-2"
+                            disabled={isAddingSubCategory || isSubmitting}
                         />
                         <Textarea
                             placeholder="Sub-Collection Description"
@@ -441,9 +542,17 @@ const AddProduct = () => {
                             maxLength={200}
                             rows={2}
                             className="mb-2"
+                            disabled={isAddingSubCategory || isSubmitting}
                         />
-                        <Input type="file" onChange={handleSubCatImageChange} className="mb-2" />
-                        <Button type="button" onClick={handleAddSubCategory}>Add New Sub-Collection</Button>
+                        <Input
+                            type="file"
+                            onChange={handleSubCatImageChange}
+                            className="mb-2"
+                            disabled={isAddingSubCategory || isSubmitting}
+                        />
+                        <Button type="button" onClick={handleAddSubCategory} disabled={isAddingSubCategory || isSubmitting}>
+                            {isAddingSubCategory ? "Adding..." : "Add New Sub-Collection"}
+                        </Button>
                     </div>
                     {errors.subCatName && <p className="text-red-500 text-sm">{errors.subCatName}</p>}
                     {errors.subCategories && <p className="text-red-500 text-sm">{errors.subCategories}</p>}
@@ -452,7 +561,14 @@ const AddProduct = () => {
                             {subCategories.map((subCat, index) => (
                                 <li key={index} className="flex items-center gap-2">
                                     <strong>{subCat.name}</strong> - {subCat.description}
-                                    <Button variant="destructive" size="sm" onClick={() => handleRemoveSubCategory(index)}>Remove</Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => handleRemoveSubCategory(index)}
+                                        disabled={isSubmitting}
+                                    >
+                                        Remove
+                                    </Button>
                                 </li>
                             ))}
                         </ul>
@@ -460,7 +576,9 @@ const AddProduct = () => {
                 </fieldset>
 
                 {/* Submit Button */}
-                <Button type="submit" disabled={uploading}>{uploading ? "Uploading..." : "Add Product"}</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Uploading..." : "Add Product"}
+                </Button>
             </form>
         </div>
     );
