@@ -23,12 +23,12 @@ import Link from 'next/link';
 import { useCart } from '@/providers/cartProvider';
 import { useAuth } from '@/providers/authProvider';
 import { useRouter } from 'next/navigation';
+import { Plus } from 'lucide-react';
 
 const Sidebar = () => {
     const { cartCount, favoritesCount } = useCart();
-    const { openLoginModal } = useAuth();
+    const { openLoginModal, user } = useAuth();
     const router = useRouter();
-
     const categories = [
         {
             name: "Home",
@@ -82,13 +82,13 @@ const Sidebar = () => {
         },
     ];
 
-
+    const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
     const quickLinks = [
         {
             name: "Favorites",
             icon: <Heart className="h-4 w-4 mr-2" />,
             count: favoritesCount,
-            onClick : () => router.push('/favourites')
+            onClick: () => router.push('/favourites')
         },
         {
             name: "My Cart",
@@ -101,6 +101,13 @@ const Sidebar = () => {
             icon: <User className="h-4 w-4 mr-2" />,
             onClick: openLoginModal,
             count: 0,
+        },
+        {
+            name: "Add Product",
+            icon: <Plus className="h-4 w-4 mr-2" />,
+            count: 0,
+            onClick: () => router.push('/add-product'),
+            isHidden: !allowedEmails.includes(user?.email || ""),
         }
     ];
 
@@ -152,7 +159,7 @@ const Sidebar = () => {
                 <div className="p-2 mt-4">
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Quick Access</h3>
                     <div className="space-y-1">
-                        {quickLinks.map((link) => (
+                        {quickLinks.map((link) => !link.isHidden && (
                             <Button
                                 key={link.name}
                                 variant="ghost"
