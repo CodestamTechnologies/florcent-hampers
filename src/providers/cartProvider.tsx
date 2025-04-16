@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Product } from "@/data"; // Adjust the import path as necessary
 import { Heart, RefreshCw, Star, Truck, X } from "lucide-react";
 import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, onSnapshot, query, collection, where, orderBy } from "firebase/firestore";
 import { useAuth } from "./authProvider";
 import { db } from "@/lib/firebase";
 import { toast } from "sonner";
+import { Order } from "@/lib/types";
 
 // Define the shape of a cart item
-interface CartItem {
+export interface CartItem {
     product: Product;
     quantity: number;
 }
@@ -22,6 +23,7 @@ interface FirestoreCartItem {
     product: Product;
     quantity: number;
 }
+
 
 // Define the context shape
 interface CartContextType {
@@ -39,6 +41,8 @@ interface CartContextType {
     favoritesCount: number;
     addToFavorites: (product: Product) => Promise<void>;
     removeFromFavorites: (productId: string) => Promise<void>;
+    orders: Order[];
+    ordersCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -75,9 +79,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
     const favoritesCount = favorites.length;
 
+    const [orders, setOrders] = useState<Order[]>([]);
+    const ordersCount = orders.length;
+
+
     // Firestore references
     const getCartRef = () => (user ? doc(db, "carts", user.uid) : null);
     const getFavoritesRef = () => (user ? doc(db, "favorites", user.uid) : null);
+    const getOrdersRef = () => {
+        if (!user) return null;
+        return query(
+            collection(db, "orders"),
+            where("email", "==", user.email),
+            orderBy("createdAt", "desc")
+        );
+    };
 
     // Sync cart with Firestore
     useEffect(() => {
@@ -118,9 +134,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             console.error("Error syncing favorites from Firestore:", error);
         });
 
+        const ordersRef = getOrdersRef();
+        if (!ordersRef) return;
+
+        // Sync orders collection in real time
+        const unsubscribeOrders = onSnapshot(ordersRef, (querySnapshot) => {
+            const ordersData: Order[] = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...(doc.data() as Order),
+            }));
+            setOrders(ordersData);
+        }, (error) => {
+            console.error("Error syncing orders from Firestore:", error);
+        });
+
+
         return () => {
             unsubscribeCart();
             unsubscribeFavorites();
+            unsubscribeOrders();
         };
     }, [user]);
 
@@ -409,6 +441,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 favoritesCount,
                 addToFavorites,
                 removeFromFavorites,
+                orders,
+                ordersCount,
             }}
         >
             {children}

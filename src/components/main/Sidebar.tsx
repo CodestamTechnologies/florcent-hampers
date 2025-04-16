@@ -1,86 +1,81 @@
 "use client"
 
-import React from 'react';
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-    Zap,
-    Shirt,
-    Footprints,
-    ShoppingBag,
-    Dumbbell,
-    Gift,
-    Lightbulb,
-    HelpCircle,
-    Heart,
-    ShoppingCart,
-    User,
-    Home,
-} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from 'next/link';
-import { useCart } from '@/providers/cartProvider';
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from '@/providers/authProvider';
+import { useCart } from '@/providers/cartProvider';
+import {
+    Gift,
+    Heart,
+    HelpCircle,
+    LayoutDashboard,
+    Package,
+    Plus,
+    Shirt,
+    ShoppingBasket,
+    ShoppingCart,
+    Sparkles,
+    ToyBrick,
+    User
+} from "lucide-react";
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
 
 const Sidebar = () => {
     const { cartCount, favoritesCount } = useCart();
     const { openLoginModal, user } = useAuth();
     const router = useRouter();
+
     const categories = [
         {
-            name: "Home",
-            link: "/",
-            icon: <Home className="h-4 w-4 mr-3" />,
-            color: "bg-amber-50 text-amber-700",
-        },
-        {
-            name: "New In",
-            link: "/new-in",
-            icon: <Zap className="h-4 w-4 mr-3" />,
-            isNew: true,
-            color: "bg-amber-50 text-amber-700",
-        },
-        {
-            name: "Clothing",
-            link: "/clothing",
-            icon: <Shirt className="h-4 w-4 mr-3" />,
-            color: "bg-indigo-50 text-indigo-700",
-        },
-        {
-            name: "Shoes",
-            link: "/shoes",
-            icon: <Footprints className="h-4 w-4 mr-3" />,
-            color: "bg-rose-50 text-rose-700",
-        },
-        {
-            name: "Accessories",
-            link: "/accessories",
-            icon: <ShoppingBag className="h-4 w-4 mr-3" />,
-            color: "bg-emerald-50 text-emerald-700",
-        },
-        {
-            name: "Activewear",
-            link: "/activewear",
-            icon: <Dumbbell className="h-4 w-4 mr-3" />,
-            isNew: true,
-            color: "bg-cyan-50 text-cyan-700",
-        },
-        {
-            name: "Gifts Living",
-            link: "/gifts-living",
+            name: "Gifts",
+            link: "/gifts",
             icon: <Gift className="h-4 w-4 mr-3" />,
+            color: "bg-pink-50 text-pink-700",
+        },
+        {
+            name: "Hampers",
+            link: "/hampers",
+            icon: <Package className="h-4 w-4 mr-3" />,
+            isNew: true,
+            color: "bg-green-50 text-green-700",
+        },
+        {
+            name: "Baskets",
+            link: "/baskets",
+            icon: <ShoppingBasket className="h-4 w-4 mr-3" />,
+            color: "bg-orange-50 text-orange-700",
+        },
+        {
+            name: "Poshak",
+            link: "/poshak",
+            icon: <Shirt className="h-4 w-4 mr-3" />,
             color: "bg-violet-50 text-violet-700",
         },
         {
-            name: "Inspiration",
-            link: "/inspiration",
-            icon: <Lightbulb className="h-4 w-4 mr-3" />,
+            name: "Soft Toys",
+            link: "/soft-toys",
+            icon: <ToyBrick className="h-4 w-4 mr-3" />,
+            isNew: true,
+            color: "bg-rose-50 text-rose-700",
+        },
+        {
+            name: "Bhandarwals",
+            link: "/bhandarwals",
+            icon: <Sparkles className="h-4 w-4 mr-3" />,
             color: "bg-yellow-50 text-yellow-700",
         },
+        {
+            name: "Diwali Items",
+            link: "/diwali-items",
+            icon: <Sparkles className="h-4 w-4 mr-3" />,
+            isNew: true,
+            color: "bg-amber-50 text-amber-700",
+        },
     ];
+
 
     const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
     const quickLinks = [
@@ -100,6 +95,12 @@ const Sidebar = () => {
             name: "Account",
             icon: <User className="h-4 w-4 mr-2" />,
             onClick: openLoginModal,
+            count: 0,
+        },
+        {
+            name: "Orders",
+            icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
+            onClick: () => router.push('/orders'),
             count: 0,
         },
         {

@@ -39,7 +39,7 @@ export interface Product {
     colors: Color[];
     tags: string[];
     priceBeforeDiscount: number;
-    discount: string | null; // e.g., "25% OFF" or null
+    discount: string; // e.g., "25% OFF" or null
     category: {
         id: string;
         name: string;
@@ -56,47 +56,48 @@ export interface Product {
 export const categories: Category[] = [
     {
         id: "cat1",
-        name: "New In",
-        description: "Latest arrivals and updates",
+        name: "Gifts",
+        description: "Thoughtful presents for every occasion",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat2",
-        name: "Clothing",
-        description: "Versatile clothing for every style",
+        name: "Hampers",
+        description: "Curated hampers packed with surprises",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat3",
-        name: "Shoes",
-        description: "Stylish footwear for any occasion",
+        name: "Baskets",
+        description: "Handcrafted baskets for every need",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat4",
-        name: "Accessories",
-        description: "Complete your look with our accessories",
+        name: "Poshak",
+        description: "Traditional attire with modern elegance",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat5",
-        name: "Activewear",
-        description: "Performance gear for an active lifestyle",
+        name: "Soft Toys",
+        description: "Adorable plushies for all ages",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat6",
-        name: "Gifts Living",
-        description: "Unique gifts and home essentials",
+        name: "Bhandarwals",
+        description: "Decorative hangings to brighten your space",
         image: "/api/placeholder/400/200",
     },
     {
         id: "cat7",
-        name: "Inspiration",
-        description: "Get inspired with our curated content",
+        name: "Diwali Items",
+        description: "Festive essentials to light up your Diwali",
         image: "/api/placeholder/400/200",
     },
 ];
+
 
 // Collections Data
 export const collections: Collection[] = [
@@ -136,7 +137,7 @@ export const products: Product[] = [
         ],
         tags: ["new", "floral", "midi", "summer"],
         priceBeforeDiscount: 89.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat1", name: "New In" },
         ratings: 4.8,
         collection: { id: "col1", name: "Summer Essentials" },
@@ -160,7 +161,7 @@ export const products: Product[] = [
         ],
         tags: ["new", "eco-friendly", "tote"],
         priceBeforeDiscount: 39.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat1", name: "New In" },
         ratings: 4.7,
         collection: { id: "col3", name: "Sustainable Collection" },
@@ -210,7 +211,7 @@ export const products: Product[] = [
         ],
         tags: ["denim", "jacket", "casual"],
         priceBeforeDiscount: 79.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat2", name: "Clothing" },
         ratings: 4.4,
         collection: { id: "col1", name: "Summer Essentials" },
@@ -236,7 +237,7 @@ export const products: Product[] = [
         ],
         tags: ["loafers", "leather", "comfort"],
         priceBeforeDiscount: 99.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat3", name: "Shoes" },
         ratings: 4.8,
         collection: { id: "col1", name: "Summer Essentials" },
@@ -286,7 +287,7 @@ export const products: Product[] = [
         ],
         tags: ["scarf", "silk", "accessory"],
         priceBeforeDiscount: 49.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat4", name: "Accessories" },
         ratings: 4.6,
         collection: { id: "col3", name: "Sustainable Collection" },
@@ -310,7 +311,7 @@ export const products: Product[] = [
         ],
         tags: ["wallet", "leather", "accessory"],
         priceBeforeDiscount: 34.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat4", name: "Accessories" },
         ratings: 4.5,
         collection: { id: "col2", name: "Workwear Edit" },
@@ -360,7 +361,7 @@ export const products: Product[] = [
         ],
         tags: ["activewear", "tank", "breathable"],
         priceBeforeDiscount: 29.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat5", name: "Activewear" },
         ratings: 4.6,
         collection: { id: "col1", name: "Summer Essentials" },
@@ -387,7 +388,7 @@ export const products: Product[] = [
         ],
         tags: ["gifts", "candles", "home"],
         priceBeforeDiscount: 29.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat6", name: "Gifts & Living" },
         ratings: 4.7,
         collection: { id: "col2", name: "Workwear Edit" },
@@ -436,7 +437,7 @@ export const products: Product[] = [
         ],
         tags: ["diy", "craft", "inspiration"],
         priceBeforeDiscount: 24.99,
-        discount: null,
+        discount: '0',
         category: { id: "cat7", name: "Inspiration" },
         ratings: 4.3,
         collection: { id: "col3", name: "Sustainable Collection" },
