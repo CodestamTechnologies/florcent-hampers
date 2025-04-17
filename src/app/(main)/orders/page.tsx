@@ -39,7 +39,7 @@ const OrdersPage = () => {
                                     className="border rounded-2xl p-6 bg-white shadow-sm hover:shadow-md transition"
                                 >
                                     <div className="flex justify-between items-center mb-4">
-                                        <h4 className="text-lg font-medium">Order #{order.id.slice(0, 8)}</h4>
+                                        <h4 className="text-lg font-medium">Order #{order.id?.slice(0, 8)}</h4>
                                         <span className="text-sm text-gray-500">{format(new Date(order.createdAt), "PPP")}</span>
                                     </div>
                                     <div className="text-gray-600 mb-2">Method: <strong className="text-gray-800 capitalize">{order.checkoutMethod}</strong></div>

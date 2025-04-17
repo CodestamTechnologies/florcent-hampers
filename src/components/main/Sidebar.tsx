@@ -9,7 +9,6 @@ import { useCart } from '@/providers/cartProvider';
 import {
     Gift,
     Heart,
-    HelpCircle,
     LayoutDashboard,
     Package,
     Plus,
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import HelpModal from "../help-modal";
 
 const Sidebar = () => {
     const { cartCount, favoritesCount } = useCart();
@@ -29,6 +29,12 @@ const Sidebar = () => {
     const router = useRouter();
 
     const categories = [
+        {
+            name: "Home",
+            link: "/",
+            icon: <LayoutDashboard className="h-4 w-4 mr-3" />,
+            color: "bg-pink-50 text-pink-700",
+        },
         {
             name: "Gifts",
             link: "/gifts",
@@ -183,13 +189,7 @@ const Sidebar = () => {
             {/* Help Section */}
             <div className="p-4 mt-auto">
                 <Separator className="mb-4" />
-                <Button
-                    variant="outline"
-                    className="w-full justify-start rounded-full border-gray-300 text-gray-700 hover:bg-blue-100 hover:text-blue-800 group"
-                >
-                    <HelpCircle className="h-4 w-4 mr-2 text-blue-600 group-hover:text-blue-700" />
-                    Help Center
-                </Button>
+                <HelpModal />
             </div>
         </div>
     );
