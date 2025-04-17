@@ -273,7 +273,7 @@ const AddProduct = () => {
                 colors,
                 tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
                 priceBeforeDiscount: parseFloat(priceBeforeDiscount),
-                discount: discount || null,
+                discount: discount,
                 category: { id: categoryObj.id, name: categoryObj.name },
                 ratings: 0,
                 collection: { id: collectionObj.id, name: collectionObj.name },
