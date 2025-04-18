@@ -89,6 +89,17 @@ const CheckoutPage = () => {
             setOrderId(docRef.id); // ✅ set the order ID here
             setIsComplete(true);
             clearCart(); // ✅ clear cart after order
+            const res = await fetch('/api/send-mail', {
+                method: 'POST',
+                body: JSON.stringify({ to: user?.email,customerName:user?.displayName }),
+              });
+          
+              if (res.ok) {
+                toast.success('✅ Order Placed Successfully Email sent to user ');
+              } else {
+                toast.error('❌ Failed to send email.');
+              }
+            // toast("Order Placed Successfully");
             toast("Order Placed Successfully");
         } catch (error) {
             console.error("Error submitting order:", error);
