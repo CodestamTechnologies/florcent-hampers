@@ -163,7 +163,7 @@ const HelpModal = () => {
                                         <Mail className="h-5 w-5 mr-3 text-blue-600" />
                                         <div>
                                             <p className="font-medium">Email Support</p>
-                                            <p className="text-sm text-gray-600">support@elegance.com</p>
+                                            <p className="text-sm text-gray-600">floristnhampers@gmail.com</p>
                                             <p className="text-sm text-gray-600">Response time: 24-48 hours</p>
                                         </div>
                                     </div>
@@ -172,19 +172,16 @@ const HelpModal = () => {
                                         <div>
                                             <p className="font-medium">Live Chat</p>
                                             <p className="text-sm text-gray-600">Available Monday-Friday</p>
-                                            <p className="text-sm text-gray-600">9am - 5pm EST</p>
+                                            <p className="text-sm text-gray-600">9am - 5pm IST</p>
                                         </div>
                                     </div>
                                 </div>
-                                <Button className="mt-6 w-full md:w-auto">
-                                    Start a Conversation
-                                </Button>
                             </Card>
                         </TabsContent>
                     </Tabs>
 
                     <DialogFooter className="flex flex-col sm:flex-row sm:justify-between items-center border-t pt-4">
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 mr-4">
                             Need more help? Contact our customer support team.
                         </div>
                         <div className="mt-4 sm:mt-0">

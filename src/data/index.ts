@@ -96,6 +96,12 @@ export const categories: Category[] = [
         description: "Festive essentials to light up your Diwali",
         image: "/api/placeholder/400/200",
     },
+    {
+        id: "cat8",
+        name: "Envelope n potlis",
+        description: "Premium envelopes and potlis to elevate your gifting game",
+        image: "/api/placeholder/400/200",
+    },
 ];
 
 

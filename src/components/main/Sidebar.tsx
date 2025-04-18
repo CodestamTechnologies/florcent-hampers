@@ -17,7 +17,8 @@ import {
     ShoppingCart,
     Sparkles,
     ToyBrick,
-    User
+    User,
+    WalletCards
 } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -77,6 +78,13 @@ const Sidebar = () => {
             name: "Diwali Items",
             link: "/diwali-items",
             icon: <Sparkles className="h-4 w-4 mr-3" />,
+            isNew: true,
+            color: "bg-amber-50 text-amber-700",
+        },
+        {
+            name: "Envelope n potlis",
+            link: "/envelope-n-potlis",
+            icon: <WalletCards className="h-4 w-4 mr-3" />,
             isNew: true,
             color: "bg-amber-50 text-amber-700",
         },
