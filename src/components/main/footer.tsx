@@ -2,6 +2,7 @@ import React from 'react'
 import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
+import Link from 'next/link'
 
 const Footer = () => {
   return (
@@ -58,6 +59,7 @@ const Footer = () => {
                           <li><a href="#" className="text-gray-400 text-sm hover:text-white">Shipping & Returns</a></li>
                           <li><a href="#" className="text-gray-400 text-sm hover:text-white">FAQ</a></li>
                           <li><a href="#" className="text-gray-400 text-sm hover:text-white">Size Guide</a></li>
+                          <li><Link href="/privacy" className="text-gray-400 text-sm hover:text-white">Privacy Policy</Link></li>
                           <li><a href="#" className="text-gray-400 text-sm hover:text-white">Terms & Conditions</a></li>
                       </ul>
                   </div>
