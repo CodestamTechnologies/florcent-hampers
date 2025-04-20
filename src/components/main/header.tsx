@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Bell, Menu, Search, ShoppingCart, User } from 'lucide-react'
-import { Input } from '../ui/input'
 import { useCart } from '@/providers/cartProvider'
 import { useAuth } from '@/providers/authProvider'
 import SearchProducts from './Search'
