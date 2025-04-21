@@ -31,7 +31,7 @@ const MainComponent = () => {
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">Shop by Category</h2>
+                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">Shop by Category</h2>
                             <p className="text-gray-600">Find the perfect pieces for your style</p>
                         </div>
                         <Button variant="outline" className="mt-4 md:mt-0">
@@ -65,7 +65,7 @@ const MainComponent = () => {
                         <div className="max-w-7xl mx-auto">
                             <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                                 <div>
-                                    <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">{category.name}</h2>
+                                    <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">{category.name}</h2>
                                     <p className="text-gray-600">{category.description}</p>
                                 </div>
                                 <Button variant="outline" className="mt-4 md:mt-0">
@@ -85,7 +85,7 @@ const MainComponent = () => {
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">Shop Our Collections</h2>
+                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">Shop Our Collections</h2>
                             <p className="text-gray-600">Curated selections for every occasion</p>
                         </div>
                         <Button variant="outline" className="mt-4 md:mt-0">
@@ -101,7 +101,7 @@ const MainComponent = () => {
                                     className="w-full h-60 object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                                    <h3 className="text-white font-serif font-medium text-xl mb-1">{collection.name}</h3>
+                                    <h3 className="text-white font-serif font-medium text-xl mb-1 ">{collection.name}</h3>
                                     <p className="text-white/80 text-sm mb-3">{collection.description}</p>
                                     <Button
                                         variant="outline"

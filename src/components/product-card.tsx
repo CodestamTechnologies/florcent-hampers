@@ -22,13 +22,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         openQuickView
     } = useCart();
 
-    // Check if product is in favorites
     const isFavorite = favorites.some(fav => fav.id === product.id);
-
-    // Disable favorite button while loading
     const disableFavoriteButton = false;
 
-    // Calculate discounted price
     const calculateDiscountedPrice = (price: number, discount: string | null): number => {
         if (!discount) return price;
         const discountPercentage = parseFloat(discount.replace("% OFF", ""));
@@ -37,7 +33,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
     const discountedPrice = calculateDiscountedPrice(product.priceBeforeDiscount, product.discount);
 
-    // Handle favorite toggle
     const handleToggleFavorite = async () => {
         setLoading(true);
         if (isFavorite) {
@@ -49,18 +44,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
     };
 
     return (
-        <Card className="overflow-hidden group h-full p-0 flex flex-col">
+        <Card className="overflow-hidden group h-full p-0 flex flex-col hover:shadow-lg transition-shadow">
             <div className="relative">
-                <img
-                    src={product.images[0] || 'https://maxm-imggenurl.web.val.run/' + product.title}
-                    alt={product.title}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                <div className="aspect-square overflow-hidden">
+                    <img
+                        src={product.images[0] || 'https://maxm-imggenurl.web.val.run/' + product.title}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                </div>
                 {product.tags.includes("new") && (
-                    <Badge className="absolute top-2 left-2 bg-amber-100 text-amber-800">New</Badge>
+                    <Badge className="absolute top-2 left-2 bg-amber-100 text-amber-800 text-[10px] sm:text-xs">New</Badge>
                 )}
                 {product.discount && (
-                    <Badge className="absolute top-2 right-2 bg-rose-100 text-rose-800">{product.discount}</Badge>
+                    <Badge className="absolute top-2 right-2 bg-rose-100 text-rose-800 text-[10px] sm:text-xs">{product.discount}</Badge>
                 )}
                 <div className="absolute bottom-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
@@ -70,65 +67,67 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         onClick={handleToggleFavorite}
                         disabled={disableFavoriteButton || loading}
                     >
-                        <Heart className={`h-4 w-4 ${isFavorite ? "fill-red-500" : ""}`} />
+                        <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${isFavorite ? "fill-red-500" : ""}`} />
                     </Button>
                     <Button
                         size="icon"
                         className="rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
                         onClick={() => addToCart(product)}
                     >
-                        <ShoppingCart className="h-4 w-4" />
+                        <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
                     </Button>
                 </div>
                 <Button
                     variant="secondary"
                     size="sm"
-                    className="absolute left-1/2 -translate-x-1/2 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+                    className="absolute left-1/2 -translate-x-1/2 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs sm:text-sm"
                     onClick={() => openQuickView(product)}
                 >
                     Quick View
                 </Button>
             </div>
-            <div className="p-4 flex-grow flex flex-col">
-                <span className="text-xs text-gray-500 mb-1">{product.category.name}</span>
-                <h3 className="font-medium text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">{product.title}</h3>
-                <div className="flex items-center mb-2">
+            <div className="p-2 sm:p-3 lg:p-4 flex-grow flex flex-col">
+                <span className="text-[10px] sm:text-xs text-gray-500 mb-1">{product.category.name}</span>
+                <h3 className="font-medium text-sm sm:text-base text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-2">
+                    {product.title}
+                </h3>
+                <div className="flex items-center mb-1 sm:mb-2">
                     <div className="flex items-center">
                         <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                        <span className="text-sm ml-1">{product.ratings}</span>
+                        <span className="text-[10px] sm:text-xs ml-1">{product.ratings}</span>
                     </div>
                 </div>
-                <div className="flex items-center mb-2">
+                <div className="flex flex-wrap items-center mb-1 sm:mb-2 gap-1">
                     {product.tags.map((tag, idx) => (
-                        <Badge key={idx} variant="outline" className="mr-1 text-xs">
+                        <Badge key={idx} variant="outline" className="text-[10px] sm:text-xs">
                             {tag}
                         </Badge>
                     ))}
                 </div>
                 <div className="flex items-center mt-auto">
-                    <span className="font-medium">
+                    <span className="font-medium text-sm sm:text-base">
                         ${product.discount ? discountedPrice.toFixed(2) : product.priceBeforeDiscount.toFixed(2)}
                     </span>
                     {product.discount && (
-                        <span className="text-gray-400 line-through text-sm ml-2">
+                        <span className="text-gray-400 line-through text-xs sm:text-sm ml-2">
                             ${product.priceBeforeDiscount.toFixed(2)}
                         </span>
                     )}
                 </div>
-                <div className="flex gap-1 mt-2">
+                <div className="flex gap-1 mt-1 sm:mt-2">
                     {product.colors.slice(0, 3).map((color, idx) => (
                         <span
                             key={idx}
-                            className="w-3 h-3 rounded-full border border-gray-300"
+                            className="w-2 h-2 sm:w-3 sm:h-3 rounded-full border border-gray-300"
                             style={{ backgroundColor: color.value }}
                             title={color.name}
                         />
                     ))}
                     {product.colors.length > 3 && (
-                        <span className="text-xs text-gray-500">+{product.colors.length - 3}</span>
+                        <span className="text-[10px] sm:text-xs text-gray-500">+{product.colors.length - 3}</span>
                     )}
                 </div>
-                <div className="mt-2 text-xs text-gray-500">
+                <div className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-gray-500">
                     Part of: <span className="text-blue-600">{product.collection.name}</span>
                 </div>
             </div>
