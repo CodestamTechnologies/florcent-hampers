@@ -14,12 +14,14 @@ import {
   ShoppingCart,
   Sparkles,
   ToyBrick,
+  Trash,
   WalletCards,
 } from "lucide-react";
 import { useCart } from "@/providers/cartProvider";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/providers/authProvider";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -29,6 +31,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useAuth();
   const { cartCount, favoritesCount } = useCart();
 
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -68,28 +71,35 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     { name: "Envelope n potlis", link: "/envelope-n-potlis", icon: <WalletCards className="h-4 w-4 mr-3" />, isNew: true },
   ];
 
+  const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
   const quickLinks = [
     { name: "Favorites", icon: <Heart className="h-4 w-4 mr-2" />, count: favoritesCount, onClick: () => router.push("/favourites") },
     { name: "My Cart", icon: <ShoppingCart className="h-4 w-4 mr-2" />, count: cartCount, onClick: () => router.push("/cart") },
     { name: "Orders", icon: <LayoutDashboard className="h-4 w-4 mr-2" />, onClick: () => router.push("/orders") },
-    { name: "Add Product", icon: <Plus className="h-4 w-4 mr-2" />, onClick: () => router.push("/add-product") },
+    {
+      name: "Add Product", icon: <Plus className="h-4 w-4 mr-2" />, onClick: () => router.push("/add-product"),
+      isHidden: !allowedEmails.includes(user?.email || ""),
+    },
+    {
+      name: "Delete Product", icon: <Trash className="h-4 w-4 mr-2" />, onClick: () => router.push("/delete-product"),
+      isHidden: !allowedEmails.includes(user?.email || ""),
+    },
   ];
 
   return (
     <aside
-    ref={sidebarRef}
-    className={` fixed top-0 left-0 h-screen w-64 bg-white border-r shadow-md z-50 transform transition-transform duration-300 ease-in-out ${
-      isOpen ? "translate-x-0" : "-translate-x-full"
-    } md:translate-x-0 md:block`}
-  >
-    {/* Close button for mobile */}
-    <button
-      onClick={toggleSidebar}
-      className="absolute top-4 right-4 text-gray-500 hover:text-black md:hidden"
+      ref={sidebarRef}
+      className={` fixed top-0 left-0 h-screen w-64 bg-white border-r shadow-md z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:block`}
     >
-      <span className="text-2xl">&times;</span>
-    </button>
-  
+      {/* Close button for mobile */}
+      <button
+        onClick={toggleSidebar}
+        className="absolute top-4 right-4 text-gray-500 hover:text-black md:hidden"
+      >
+        <span className="text-2xl">&times;</span>
+      </button>
+
       <div className="h-full flex flex-col overflow-y-auto custom-scrollbar">
         {/* Logo */}
         <div className="px-6 py-4">
@@ -132,7 +142,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         <div className="px-4 pt-4">
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Access</h3>
           <div className="space-y-1">
-            {quickLinks.map((link) => (
+            {quickLinks.map((link) => !link.isHidden && (
               <Button
                 key={link.name}
                 variant="ghost"

@@ -2,12 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { categories, Category, collections, Product } from '@/data'; // Adjust the import path as necessary
+import { categories, Category, Product } from '@/data'; // Adjust the import path as necessary
 import { useProducts } from "@/providers/productsProvider";
 import {
     Gift,
-    Heart,
-    Instagram,
     RefreshCw,
     ShieldCheck,
     Truck
@@ -81,7 +79,7 @@ const MainComponent = () => {
             })}
 
             {/* Collections Section */}
-            <section className="py-16 px-6 bg-white">
+            {/* <section className="py-16 px-6 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
@@ -115,7 +113,7 @@ const MainComponent = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Features */}
             <section className="py-16 px-6 bg-white">
@@ -146,7 +144,7 @@ const MainComponent = () => {
             </section>
 
             {/* Instagram Section */}
-            <section className="py-16 px-6 bg-white">
+            {/* <section className="py-16 px-6 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-10">
                         <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">Follow Us @elegance</h2>
@@ -173,7 +171,7 @@ const MainComponent = () => {
                         </Button>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </div>
     );
 };
