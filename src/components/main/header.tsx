@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Bell, Menu, ShoppingCart, User } from "lucide-react";
@@ -8,6 +9,7 @@ import { useAuth } from "@/providers/authProvider";
 import SearchProducts from "./Search";
 import { useProducts } from "@/providers/productsProvider";
 import Sidebar from "./Sidebar"; 
+
 
 const Header = () => {
   const [notificationCount] = useState(2);
