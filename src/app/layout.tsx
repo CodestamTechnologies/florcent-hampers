@@ -2,7 +2,6 @@ import { AuthProvider } from "@/providers/authProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import { ProductsProvider } from "@/providers/productsProvider";
-import Header from "@/components/main/header";
 
 export default function RootLayout({
   children,
