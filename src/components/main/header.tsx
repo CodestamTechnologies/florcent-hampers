@@ -63,14 +63,14 @@ const Header = () => {
             <div className="hidden md:flex items-center space-x-4">
               <SearchProducts products={products} />
 
-              <Button variant="ghost" size="icon" className="relative">
+              {/* <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 {notificationCount > 0 && (
                   <span className="absolute top-0 right-0 h-4 w-4 bg-rose-500 text-white text-xs flex items-center justify-center rounded-full">
                     {notificationCount}
                   </span>
                 )}
-              </Button>
+              </Button> */}
 
               <Button variant="ghost" size="icon" onClick={openLoginModal}>
                 <User className="h-5 w-5" />

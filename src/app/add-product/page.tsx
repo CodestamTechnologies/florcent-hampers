@@ -369,7 +369,7 @@ const AddProduct = () => {
                             id="priceBeforeDiscount"
                             value={priceBeforeDiscount}
                             onChange={(e) => setPriceBeforeDiscount(e.target.value)}
-                            placeholder="e.g., 99.99"
+                            placeholder="e.g., ₹999"
                             disabled={isSubmitting}
                         />
                         {errors.priceBeforeDiscount && <p className="text-red-500 text-sm">{errors.priceBeforeDiscount}</p>}

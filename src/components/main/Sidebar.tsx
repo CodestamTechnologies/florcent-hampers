@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/providers/authProvider";
+import Image from "next/image";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -102,14 +103,15 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
 
       <div className="h-full flex flex-col overflow-y-auto custom-scrollbar">
         {/* Logo */}
-        <div className="px-6 py-4">
-          <h1 className="text-xl font-serif tracking-tight font-medium text-gray-900">
-            <span className="font-light italic">florcent</span>
-            <span className="text-gray-400 mx-1">&</span>
-            <span className="font-medium">hampers</span>
-          </h1>
-        </div>
-
+        <div className="px-6 text-center py-4 flex items-center justify-center">
+  <Image
+    src='/flore2.png'
+    alt="Florcent & Hampers" 
+    width={170} // adjust as needed
+    height={10} // adjust as needed
+    className="object-contain text-center flex items-center-safe justify-center"
+  />
+</div>
         <Separator />
 
         {/* Explore */}
