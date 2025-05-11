@@ -3,6 +3,7 @@ import { Separator } from '../ui/separator'
 import { Button } from '../ui/button'
 import { Facebook, Instagram, Twitter } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const Footer = () => {
   return (
@@ -10,24 +11,27 @@ const Footer = () => {
           <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                   <div>
-                      <div className="mb-2">
-                          <h3 className="text-xl font-serif tracking-tight font-medium text-gray-100">
-                              <span className="font-light italic">florcent</span>
-                              <span className="text-gray-400 mx-1">&</span>
-                              <span className="font-medium">hampers</span>
-                          </h3>
+                        {/* Logo */}
+                              <div className=" text-center mb-5 mr-16  flex items-center justify-center">
+                        <Image
+                          src='/logofooter.jpg'
+                          alt="Florcent & Hampers" 
+                          width={100} // adjust as needed
+                          height={100} // adjust as needed
+                          className="object-contain text-center flex items-center-safe justify-center"
+                        />
                       </div>
                       <p className="text-gray-400 text-sm mb-6">
                           Contemporary fashion for the modern individual. Elevate your style with our thoughtfully crafted collections.
                       </p>
                       <div className="flex space-x-4">
-                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-gray-500">
                               <Instagram className="h-5 w-5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-gray-500">
                               <Facebook className="h-5 w-5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
+                          <Button variant="ghost" size="icon" className="text-gray-400 hover:text-gray-500">
                               <Twitter className="h-5 w-5" />
                           </Button>
                       </div>
@@ -68,10 +72,10 @@ const Footer = () => {
               <div className="pt-8 flex flex-col md:flex-row justify-between items-center">
                   <p className="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Élégance. All rights reserved.</p>
                   <div className="flex items-center gap-4">
-                      <img src="/api/placeholder/40/24?text=Visa" alt="Visa" className="h-6" />
-                      <img src="/api/placeholder/40/24?text=MC" alt="Mastercard" className="h-6" />
-                      <img src="/api/placeholder/40/24?text=Amex" alt="American Express" className="h-6" />
-                      <img src="/api/placeholder/40/24?text=PayPal" alt="PayPal" className="h-6" />
+                      <img src="/visa.webp" alt="Visa" className="h-6" />
+                      <img src="/Mastercard.webp" alt="Mastercard" className="h-6" />
+                      <img src="/american1.webp" alt="American Express" className="h-6" />
+                      <img src="/paypal.webp" alt="PayPal" className="h-6" />
                   </div>
               </div>
           </div>

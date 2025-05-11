@@ -11,6 +11,7 @@ import {
     Truck
 } from 'lucide-react';
 import ProductCard from "../product-card";
+import Link from "next/link";
 
 const MainComponent = () => {
     const { products } = useProducts();
@@ -32,9 +33,9 @@ const MainComponent = () => {
                             <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">Shop by Category</h2>
                             <p className="text-gray-600">Find the perfect pieces for your style</p>
                         </div>
-                        <Button variant="outline" className="mt-4 md:mt-0">
+                        {/* <Button variant="outline" className="mt-4 md:mt-0">
                             View All Categories
-                        </Button>
+                        </Button> */}
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {categories.map((category) => (
@@ -66,9 +67,11 @@ const MainComponent = () => {
                                     <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">{category.name}</h2>
                                     <p className="text-gray-600">{category.description}</p>
                                 </div>
-                                <Button variant="outline" className="mt-4 md:mt-0">
+                                <Link href={`/${category.name}`}>
+                                {/* <Button  variant="outline" className="mt-4 md:mt-0">
                                     View All {category.name}
-                                </Button>
+                                </Button> */}
+                                </Link>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 {categoryProducts.map((product, i) => <ProductCard product={product} key={i} />)}
@@ -122,7 +125,7 @@ const MainComponent = () => {
                         <Card className="p-6 text-center">
                             <Truck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
                             <h3 className="font-medium mb-2">Free Shipping</h3>
-                            <p className="text-gray-600 text-sm">On all orders over $100</p>
+                            <p className="text-gray-600 text-sm">On all orders over ₹1000</p>
                         </Card>
                         <Card className="p-6 text-center">
                             <RefreshCw className="h-10 w-10 mx-auto mb-4 text-blue-600" />

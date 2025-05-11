@@ -11,10 +11,7 @@ import { collection, getDocs } from "firebase/firestore";
 
 // Dummy store locations for fallback or testing
 const DUMMY_STORES: StoreLocation[] = [
-    { id: "store-1", name: "Downtown Store", address: "123 Main St, Downtown, NY 10001" },
-    { id: "store-2", name: "Eastside Mall", address: "456 East Avenue, Eastside Mall, NY 10002" },
-    { id: "store-3", name: "Westside Plaza", address: "789 West Blvd, Westside Plaza, NY 10003" },
-    { id: "store-4", name: "Uptown Outlet", address: "101 North St, Uptown, NY 10004" },
+    { id: "store-1", name: "F&H", address: "Astor Green,kanke road,  Gandhi Nagar, shop no 13" },
 ];
 
 interface StorePickupFormProps {

@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
-import { Bell, Menu, ShoppingCart, User } from "lucide-react";
+import { Menu, ShoppingCart, User } from "lucide-react";
 import { useCart } from "@/providers/cartProvider";
 import { useAuth } from "@/providers/authProvider";
 import SearchProducts from "./Search";
@@ -12,7 +12,7 @@ import Sidebar from "./Sidebar";
 
 
 const Header = () => {
-  const [notificationCount] = useState(2);
+  // const [notificationCount] = useState(2);
   const { cartCount, openCartModal } = useCart();
   const { openLoginModal } = useAuth();
   const { products } = useProducts();

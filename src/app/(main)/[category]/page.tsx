@@ -2,30 +2,35 @@
 
 import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { categories, products } from "@/data"; // Adjust the import path as necessary
+import { categories, Category, Product } from "@/data";
 import { notFound } from "next/navigation";
 import { use } from "react";
+import { useRouter } from "next/navigation";
+import { useProducts } from "@/providers/productsProvider";
 
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
 }
 
 const CategoryPage = ({ params }: CategoryPageProps) => {
+    const router = useRouter();
     const { category: cat } = use(params);
-    // Decode the slug (in case it contains spaces or special characters)
+    const { products } = useProducts();
+    
+ 
     const decodedSlug = decodeURIComponent(cat);
 
-    // Find the category based on the slug (convert category name to lowercase for matching)
+    
     const category = categories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
 
-    // If category not found, return 404
+   
     if (!category) {
         notFound();
     }
 
-    // Filter products for this category
+
     const categoryProducts = products.filter(
         (product) => product.category.name === category.name
     );
@@ -40,22 +45,21 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                             <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">{category.name}</h2>
                             <p className="text-gray-600">{category.description}</p>
                         </div>
-                        <Button variant="outline" className="mt-4 md:mt-0">
-                            Back to Categories
+                        <Button 
+                            onClick={() => router.push('/')} 
+                            variant="outline" 
+                            className="mt-4 md:mt-0"
+                        >
+                            Back 
                         </Button>
                     </div>
-                    {categoryProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {categoryProducts.map((product) => <ProductCard
-                                key={product.id}
-                                product={product}
-                            />)}
-                        </div>
-                    ) : (
-                        <div className="text-center text-gray-600">
-                            <p>No products found in this category.</p>
-                        </div>
-                    )}
+                    
+                    {/* Only show products for this category */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {categoryProducts.map((product, i) => (
+                            <ProductCard product={product} key={i} />
+                        ))}
+                    </div>
                 </div>
             </section>
         </div>

@@ -125,7 +125,7 @@ export const CartModal = ({
                                                 </div>
                                                 <div className="mt-2 flex items-center justify-between">
                                                     <p className="text-sm font-medium text-gray-800">
-                                                        ${discountedPrice.toFixed(2)} x {item.quantity} = $
+                                                        ₹{discountedPrice.toFixed(2)} x {item.quantity} = ₹
                                                         {(discountedPrice * item.quantity).toFixed(2)}
                                                     </p>
                                                     <Button
@@ -176,7 +176,7 @@ export const CartModal = ({
                                     <span>
                                         {totalPrice >= freeShippingThreshold
                                             ? "You qualify for free shipping!"
-                                            : `Add $${(freeShippingThreshold - totalPrice).toFixed(2)} more for free shipping`}
+                                            : `Add ₹${(freeShippingThreshold - totalPrice).toFixed(2)} more for free shipping`}
                                     </span>
                                 </div>
                                 <Progress value={progress} className="h-2 bg-gray-200" />
@@ -185,16 +185,16 @@ export const CartModal = ({
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm text-gray-600">
                                     <span>Subtotal</span>
-                                    <span>${totalPrice.toFixed(2)}</span>
+                                    <span>₹{totalPrice.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-600">
                                     <span>Estimated Shipping</span>
-                                    <span>{totalPrice >= freeShippingThreshold ? "Free" : "$5.00"}</span>
+                                    <span>{totalPrice >= freeShippingThreshold ? "Free" : "₹10.00"}</span>
                                 </div>
                                 <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                                     <span className="text-lg font-medium text-gray-800">Total</span>
                                     <span className="text-xl font-semibold text-blue-600">
-                                        ${(totalPrice + (totalPrice >= freeShippingThreshold ? 0 : 5)).toFixed(2)}
+                                        ₹{(totalPrice + (totalPrice >= freeShippingThreshold ? 0 : 5)).toFixed(2)}
                                     </span>
                                 </div>
                             </div>

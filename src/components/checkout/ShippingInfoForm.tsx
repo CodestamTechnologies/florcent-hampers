@@ -78,7 +78,7 @@ export const ShippingInfoForm: React.FC<ShippingInfoFormProps> = ({ form, codFee
                     </div>
                     <div className="ml-3">
                         <p className="text-sm text-yellow-700">
-                            A cash on delivery fee of ${codFee.toFixed(2)} will be added to your total.
+                            A cash on delivery fee of ₹{codFee.toFixed(2)} will be added to your total.
                         </p>
                     </div>
                 </div>

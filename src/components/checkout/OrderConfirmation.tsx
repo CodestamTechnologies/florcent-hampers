@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, Gift, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import { CheckoutMethod } from "@/lib/types";
+import Link from "next/link";
 
 interface OrderConfirmationProps {
     checkoutMethod: CheckoutMethod;
@@ -29,10 +30,12 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ checkoutMe
                             </p>
                         )}
                     </div>
-                    <Button className="bg-blue-600 hover:bg-blue-700 mr-4">
+                    {/* <Button className="bg-blue-600 hover:bg-blue-700 mr-4">
                         {checkoutMethod === "store-pickup" ? "View Pickup Details" : "Track Your Order"}
-                    </Button>
+                    </Button> */}
+                    <Link href={'/'}>
                     <Button variant="outline">Continue Shopping</Button>
+                    </Link>
                 </div>
             </section>
 
@@ -42,7 +45,7 @@ export const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ checkoutMe
                         <Card className="p-6 text-center">
                             <Truck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
                             <h3 className="font-medium mb-2">Free Shipping</h3>
-                            <p className="text-gray-600 text-sm">On all orders over $100</p>
+                            <p className="text-gray-600 text-sm">On all orders over ₹1000</p>
                         </Card>
                         <Card className="p-6 text-center">
                             <RefreshCw className="h-10 w-10 mx-auto mb-4 text-blue-600" />

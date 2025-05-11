@@ -48,14 +48,14 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ cartItems, checkoutM
                             {item.product.discount ? (
                                 <>
                                     <p className="font-medium">
-                                        ${calculateDiscountedPrice(item.product.priceBeforeDiscount, item.product.discount).toFixed(2)}
+                                        ₹{calculateDiscountedPrice(item.product.priceBeforeDiscount, item.product.discount).toFixed(2)}
                                     </p>
                                     <p className="text-xs text-gray-500 line-through">
-                                        ${item.product.priceBeforeDiscount.toFixed(2)}
+                                        ₹{item.product.priceBeforeDiscount.toFixed(2)}
                                     </p>
                                 </>
                             ) : (
-                                <p className="font-medium">${item.product.priceBeforeDiscount.toFixed(2)}</p>
+                                <p className="font-medium">₹{item.product.priceBeforeDiscount.toFixed(2)}</p>
                             )}
                         </div>
                     </div>
@@ -65,29 +65,29 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ cartItems, checkoutM
             <div className="space-y-2">
                 <div className="flex justify-between">
                     <p className="text-gray-600">Subtotal</p>
-                    <p className="font-medium">${subtotal.toFixed(2)}</p>
+                    <p className="font-medium">₹{subtotal.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between">
                     <p className="text-gray-600">Shipping</p>
                     {shipping === 0 ? (
                         <p className="font-medium text-green-600">Free</p>
                     ) : (
-                        <p className="font-medium">${shipping.toFixed(2)}</p>
+                        <p className="font-medium">₹{shipping.toFixed(2)}</p>
                     )}
                 </div>
                 {codFee > 0 && (
                     <div className="flex justify-between">
                         <p className="text-gray-600">Cash on Delivery Fee</p>
-                        <p className="font-medium">${codFee.toFixed(2)}</p>
+                        <p className="font-medium">₹{codFee.toFixed(2)}</p>
                     </div>
                 )}
                 <div className="flex justify-between">
                     <p className="text-gray-600">Tax (8%)</p>
-                    <p className="font-medium">${tax.toFixed(2)}</p>
+                    <p className="font-medium">₹{tax.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between text-lg font-medium pt-2 border-t mt-2">
                     <p>Total</p>
-                    <p>${total.toFixed(2)}</p>
+                    <p>₹{total.toFixed(2)}</p>
                 </div>
             </div>
         </Card>
