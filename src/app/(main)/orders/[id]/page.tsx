@@ -23,7 +23,7 @@ const OrderDetailsPage = ({ params }: { params: Promise<PageParams> }) => {
                     <div className="max-w-7xl mx-auto text-center">
                         <PackageCheck className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                         <h3 className="text-xl font-medium mb-2">Order not found</h3>
-                        <p className="text-gray-600 mb-6">We couldn't find the order you're looking for</p>
+                        <p className="text-gray-600 mb-6">We couldn&apos;t find the order you&apos;re looking for</p>
                         <div className="flex justify-center gap-4">
                             <Button asChild variant="outline">
                                 <Link href="/orders">

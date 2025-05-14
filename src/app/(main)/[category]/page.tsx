@@ -2,7 +2,7 @@
 
 import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { categories, Category, Product } from "@/data";
+import { categories } from "@/data";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { useRouter } from "next/navigation";
@@ -16,16 +16,16 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     const router = useRouter();
     const { category: cat } = use(params);
     const { products } = useProducts();
-    
- 
+
+
     const decodedSlug = decodeURIComponent(cat);
 
-    
+
     const category = categories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
 
-   
+
     if (!category) {
         notFound();
     }
@@ -45,15 +45,15 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                             <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">{category.name}</h2>
                             <p className="text-gray-600">{category.description}</p>
                         </div>
-                        <Button 
-                            onClick={() => router.push('/')} 
-                            variant="outline" 
+                        <Button
+                            onClick={() => router.push('/')}
+                            variant="outline"
                             className="mt-4 md:mt-0"
                         >
-                            Back 
+                            Back
                         </Button>
                     </div>
-                    
+
                     {/* Only show products for this category */}
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categoryProducts.map((product, i) => (
