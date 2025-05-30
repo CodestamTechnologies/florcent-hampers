@@ -69,10 +69,16 @@ const CheckoutPage = () => {
     };
 
     const onSubmit = async (data: CheckoutFormValues) => {
+        if (!user) {
+            toast.error("Please sign in to complete your order");
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
-            const order: Order = {
+            // Create order object
+              const order: Order = {
                 ...data,
                 cartItems,
                 subtotal,
@@ -85,29 +91,47 @@ const CheckoutPage = () => {
                 email : user?.email || ''
             };
 
+            // Save to Firestore
             const docRef = await addDoc(collection(db, "orders"), order);
-            setOrderId(docRef.id); // ✅ set the order ID here
+            const newOrderId = docRef.id;
+            setOrderId(newOrderId);
+            
+            // Clear cart
+            clearCart();
+            
+            // Send confirmation email
+            try {
+                const emailResponse = await fetch('/api/send-mail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: user.email,
+                        customerName: user.displayName || 'Customer',
+                        order: newOrderId // Use the actual order ID from Firestore
+                    }),
+                });
+
+                if (!emailResponse.ok) {
+                    throw new Error('Email sending failed');
+                }
+
+                toast.success("Order placed successfully! Confirmation email sent.");
+            } catch (emailError) {
+                console.error("Email sending error:", emailError);
+                toast.success("Order placed successfully! (Email confirmation failed)");
+            }
+
             setIsComplete(true);
-            clearCart(); // ✅ clear cart after order
-            const res = await fetch('/api/send-mail', {
-                method: 'POST',
-                body: JSON.stringify({ to: user?.email,customerName:user?.displayName }),
-              });
-          
-              if (res.ok) {
-                toast.success('✅ Order Placed Successfully Email sent to user ');
-              } else {
-                toast.error('❌ Failed to send email.');
-              }
-            // toast("Order Placed Successfully");
-            toast("Order Placed Successfully");
         } catch (error) {
-            console.error("Error submitting order:", error);
+            console.error("Order submission error:", error);
             toast.error("Failed to place order. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
     };
+
 
     if (isComplete && orderId) {
         return <OrderConfirmation checkoutMethod={checkoutMethod} orderId={orderId} />;

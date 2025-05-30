@@ -26,37 +26,42 @@ const MainComponent = () => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
             {/* Categories Section */}
-            <section className="py-16 px-6 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-                        <div>
-                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">Shop by Category</h2>
-                            <p className="text-gray-600">Find the perfect pieces for your style</p>
-                        </div>
-                        {/* <Button variant="outline" className="mt-4 md:mt-0">
-                            View All Categories
-                        </Button> */}
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        {categories.map((category) => (
-                            <Card key={category.id} className="text-center py-6 hover:shadow-md transition-shadow">
-                                <img
-                                    src={"https://maxm-imggenurl.web.val.run/" + category.name}
-                                    alt={category.name}
-                                    className="w-12 h-12 mx-auto mb-2 object-cover rounded-full"
-                                />
-                                <h3 className="font-medium mb-1">{category.name}</h3>
-                                <p className="text-sm text-gray-500">
-                                    {products.filter(product => product.category.name === category.name).length} products
-                                </p>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </section>
+           <section className="py-16 px-6 bg-white">
+  <div className="max-w-7xl mx-auto">
+    <div className="flex flex-col md:flex-row text-left mb-10">
+      <div>
+        <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-left">Shop by Category</h2>
+        <p className="text-gray-600">Find the perfect pieces for your style</p>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      {categories.map((category) => {
+        const href = `/${category.name.toLowerCase().replace(/\s+/g, '-')}`;
+        return (
+          <Link href={href} key={category.id} passHref>
+            <Card className="group relative block overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-48">
+              <div className="absolute bottom-0 w-full bg-black/30   transition-all duration-300 z-10 flex flex-col items-center justify-center p-4">
+                <h3 className="font-medium text-white text-sm mb-1 text-center">{category.name}</h3>
+                <p className="text-xs text-gray-200">
+                  {products.filter(product => product.category.name === category.name).length} products
+                </p>
+              </div>
+              <img
+                src={"https://maxm-imggenurl.web.val.run/" + category.name}
+                alt={category.name}
+                className="w-full h-full object-cover absolute inset-0 transform group-hover:scale-105 transition-transform duration-500"
+              />
+            </Card>
+          </Link>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
             {/* Products Grouped by Category */}
             {categories.map((category) => {
+                    const href = `/${category.name.toLowerCase().replace(/\s+/g, '-')}`;
                 const categoryProducts = groupedProducts[category.name];
                 if (categoryProducts.length === 0) return null; // Skip categories with no products
                 return (
@@ -64,13 +69,13 @@ const MainComponent = () => {
                         <div className="max-w-7xl mx-auto">
                             <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                                 <div>
-                                    <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">{category.name}</h2>
+                                    <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center lg:text-left">{category.name}</h2>
                                     <p className="text-gray-600">{category.description}</p>
                                 </div>
-                                <Link href={`/${category.name}`}>
-                                {/* <Button  variant="outline" className="mt-4 md:mt-0">
+                                   <Link href={href}  >
+                                <Button  variant="outline" className="mt-4 md:mt-0">
                                     View All {category.name}
-                                </Button> */}
+                                </Button>
                                 </Link>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

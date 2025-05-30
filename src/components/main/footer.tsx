@@ -70,7 +70,7 @@ const Footer = () => {
               </div>
               <Separator className="bg-gray-800" />
               <div className="pt-8 flex flex-col md:flex-row justify-between items-center">
-                  <p className="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Élégance. All rights reserved.</p>
+                  <p className="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Florist  Hampers & Events. All rights reserved.</p>
                   <div className="flex items-center gap-4">
                       <img src="/visa.webp" alt="Visa" className="h-6" />
                       <img src="/Mastercard.webp" alt="Mastercard" className="h-6" />

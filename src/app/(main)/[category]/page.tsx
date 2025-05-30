@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { categories, Category, Product } from "@/data";
+import { categories } from "@/data";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { useRouter } from "next/navigation";
@@ -16,20 +16,16 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     const router = useRouter();
     const { category: cat } = use(params);
     const { products } = useProducts();
-    
- 
+
     const decodedSlug = decodeURIComponent(cat);
 
-    
     const category = categories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
 
-   
     if (!category) {
         notFound();
     }
-
 
     const categoryProducts = products.filter(
         (product) => product.category.name === category.name
@@ -42,24 +38,38 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">{category.name}</h2>
+                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">
+                                {category.name}
+                            </h2>
                             <p className="text-gray-600">{category.description}</p>
                         </div>
-                        <Button 
-                            onClick={() => router.push('/')} 
-                            variant="outline" 
+                        <Button
+                            onClick={() => router.push("/")}
+                            variant="outline"
                             className="mt-4 md:mt-0"
                         >
-                            Back 
+                            Back
                         </Button>
                     </div>
-                    
-                    {/* Only show products for this category */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {categoryProducts.map((product, i) => (
-                            <ProductCard product={product} key={i} />
-                        ))}
-                    </div>
+
+                    {/* Category Products Grid or Fallback Message */}
+                    {categoryProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {categoryProducts.map((product, i) => (
+                                <ProductCard product={product} key={i} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-20">
+                            <h3 className="text-2xl font-semibold text-gray-700 mb-4">
+                                No products found in this category
+                            </h3>
+                            <p className="text-gray-500 max-w-md mx-auto">
+                                We're currently out of stock or still updating this category.
+                                Please check back soon or explore other categories!
+                            </p>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

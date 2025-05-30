@@ -17,9 +17,9 @@ const layout = ({
                 {/* <Sidebar /> */}
                 <div className="flex-1">
                     <main className="">
-                        <div className="bg-blue-900 text-white py-2 px-6 text-xs text-center">
-                            Free shipping on all orders over $100 | Use code WELCOME15 for 15% off your first order
-                        </div>
+                        {/* <div className="bg-blue-900 text-white py-2 px-6 text-xs text-center">
+                            Free shipping on all orders over ₹1000 | Use code WELCOME15 for 15% off your first order
+                        </div> */}
                         <ProductsProvider>
                         <Header />
                         </ProductsProvider>

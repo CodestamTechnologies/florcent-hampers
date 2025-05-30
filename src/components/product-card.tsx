@@ -57,7 +57,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     <Badge className="absolute top-2 left-2 bg-amber-100 text-amber-800 text-[10px] sm:text-xs">New</Badge>
                 )}
                 {product.discount && (
-                    <Badge className="absolute top-2 right-2 bg-rose-100 text-rose-800 text-[10px] sm:text-xs">{product.discount}</Badge>
+                    <Badge className="absolute top-2 right-2 bg-rose-100 text-rose-800 text-[10px] sm:text-xs">-{product.discount}%</Badge>
                 )}
                 <div className="absolute bottom-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button

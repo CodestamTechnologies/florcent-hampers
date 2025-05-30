@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/providers/authProvider";
+import { useRouter } from "next/navigation";
 
 // Dummy file upload function
 const uploadFile = async (file: File): Promise<string> => {
@@ -46,6 +47,7 @@ const AddProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedCollection, setSelectedCollection] = useState("");
     const [productImageFiles, setProductImageFiles] = useState<FileList | null>(null);
+     const router =useRouter();
 
     // Colors state
     const [colors, setColors] = useState<Color[]>([]);
@@ -320,10 +322,20 @@ const AddProduct = () => {
     if (!allowedEmails.includes(user?.email || "")) {
         return <div>Unauthorised</div>;
     }
-
+    
     return (
         <div className="p-4 max-w-4xl mx-auto">
+            <div className="flex flex-row justify-between items-center">
+
             <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
+             <Button 
+                            onClick={() => router.push('/')} 
+                            variant="outline" 
+                            className="mt-4 md:mt-0"
+                            >
+                            Back 
+                        </Button>
+                            </div>
             {errors.fetch && <p className="text-red-500 text-sm mb-4">{errors.fetch}</p>}
             <form onSubmit={handleSubmit}>
                 {/* Title */}

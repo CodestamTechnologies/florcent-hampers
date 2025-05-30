@@ -25,7 +25,7 @@ export const ShippingInfoForm: React.FC<ShippingInfoFormProps> = ({ form, codFee
                         <FormItem className="md:col-span-2">
                             <FormLabel>Address</FormLabel>
                             <FormControl>
-                                <Input placeholder="123 Main St" {...field} />
+                                <Input placeholder="Chandni Chowk" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -38,7 +38,7 @@ export const ShippingInfoForm: React.FC<ShippingInfoFormProps> = ({ form, codFee
                         <FormItem>
                             <FormLabel>City</FormLabel>
                             <FormControl>
-                                <Input placeholder="New York" {...field} />
+                                <Input placeholder="New Delhi" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -51,7 +51,7 @@ export const ShippingInfoForm: React.FC<ShippingInfoFormProps> = ({ form, codFee
                         <FormItem>
                             <FormLabel>Postal Code</FormLabel>
                             <FormControl>
-                                <Input placeholder="10001" {...field} />
+                                <Input placeholder="11222" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -64,7 +64,7 @@ export const ShippingInfoForm: React.FC<ShippingInfoFormProps> = ({ form, codFee
                         <FormItem className="md:col-span-2">
                             <FormLabel>Country</FormLabel>
                             <FormControl>
-                                <Input placeholder="United States" {...field} />
+                                <Input placeholder="India" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

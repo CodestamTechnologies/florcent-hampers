@@ -103,6 +103,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
 
       <div className="h-full flex flex-col overflow-y-auto custom-scrollbar">
         {/* Logo */}
+        <Link href={'/'}>
         <div className="px-6 text-center py-4 flex items-center justify-center">
   <Image
     src='/flore2.png'
@@ -110,8 +111,9 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     width={170} // adjust as needed
     height={10} // adjust as needed
     className="object-contain text-center flex items-center-safe justify-center"
-  />
+    />
 </div>
+    </Link>
         <Separator />
 
         {/* Explore */}

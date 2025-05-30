@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -24,6 +23,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Product } from "@/data";
+import { useRouter } from "next/navigation";
 
 interface ProductWithId extends Product {
     docId: string;
@@ -36,7 +36,7 @@ const DeleteProduct = () => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [productToDelete, setProductToDelete] = useState<ProductWithId | null>(null);
     const { user } = useAuth();
-
+     const router =useRouter();
     // Fetch products from Firestore
     useEffect(() => {
         const fetchProducts = async () => {
@@ -91,7 +91,17 @@ const DeleteProduct = () => {
 
     return (
         <div className="p-4 max-w-4xl mx-auto">
+            <div className="flex flex-row justify-between items-center">
+
             <h1 className="text-2xl font-bold mb-4">Delete Product</h1>
+             <Button 
+                            onClick={() => router.push('/')} 
+                            variant="outline" 
+                            className="mt-4 md:mt-0"
+                            >
+                            Back 
+                        </Button>
+                            </div>
             {errors.fetch && <p className="text-red-500 text-sm mb-4">{errors.fetch}</p>}
             {products.length === 0 ? (
                 <p className="text-lg">No products available to delete.</p>

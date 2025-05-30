@@ -24,7 +24,7 @@ export const ContactInfoForm: React.FC<ContactInfoFormProps> = ({ form }) => {
                         <FormItem>
                             <FormLabel>Full Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="John Doe" {...field} />
+                                <Input placeholder="Rohit Sharma" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -37,7 +37,7 @@ export const ContactInfoForm: React.FC<ContactInfoFormProps> = ({ form }) => {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="john@example.com" {...field} />
+                                <Input placeholder="rohitsharma@gmail.com" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -50,7 +50,7 @@ export const ContactInfoForm: React.FC<ContactInfoFormProps> = ({ form }) => {
                         <FormItem className="md:col-span-2">
                             <FormLabel>Phone Number</FormLabel>
                             <FormControl>
-                                <Input placeholder="+1 (555) 123-4567" {...field} />
+                                <Input placeholder="+91 0123456789" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
