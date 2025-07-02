@@ -55,7 +55,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                     </div>
 
                     {/* Only show products for this category */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="p-4 sm:p-0 grid xs:grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categoryProducts?.map((product, i) => (
                             <ProductCard product={product} key={i} />
                         ))}

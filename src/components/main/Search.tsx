@@ -8,8 +8,10 @@ import {
   CommandEmpty,
   CommandItem
 } from '@/components/ui/command';
-import { Product } from '@/lib/types';
+// import { Product } from '@/lib/types';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/providers/cartProvider';
+import { Product } from '@/data';
 
 interface SearchProductsProps {
   products: Product[];
@@ -21,18 +23,13 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const router = useRouter();
-
-  // Debounce the query for performance
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [query]);
+   const {
+        openQuickView
+    } = useCart();
 
   // Filter products on every debounced input change
   useEffect(() => {
-    const lowerQuery = debouncedQuery.toLowerCase();
+    const lowerQuery = query.toLowerCase();
     setFilteredProducts(
       products.filter((product) =>
         product.title.toLowerCase().includes(lowerQuery) ||
@@ -90,7 +87,8 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
             <CommandItem
               key={`${product.id ?? ''}-${product.title}-${index}`}
               onSelect={() => {
-                router.push(`/product/${product.id}`);
+                openQuickView(product)
+                // router.push(`/produt/${product.id}`);
                 setOpen(false);
               }}
               className="cursor-pointer"
