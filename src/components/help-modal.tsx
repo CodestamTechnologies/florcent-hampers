@@ -32,7 +32,7 @@ const HelpModal = () => {
                 },
                 {
                     question: "What are your shipping options?",
-                    answer: "We offer standard shipping (3-5 business days), express shipping (1-2 business days), and free shipping on all orders over $100."
+                    answer: "We offer standard shipping (3-5 business days), express shipping (1-2 business days), and free shipping on all orders over Rs100."
                 },
                 {
                     question: "When will my order arrive?",
