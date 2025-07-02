@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Search } from 'lucide-react';
 import {
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/command';
 import { Product } from '@/lib/types';
 import { useRouter } from 'next/navigation';
-import debounce from 'lodash.debounce';
 
 interface SearchProductsProps {
   products: Product[];
@@ -19,20 +18,28 @@ interface SearchProductsProps {
 const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const router = useRouter();
 
-  // Debounced filter for performance
-  const debouncedQuery = useMemo(() => debounce(setQuery, 300), []);
+  // Debounce the query for performance
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [query]);
 
-  const filteredProducts = useMemo(() => {
-    const lowerQuery = query.toLowerCase();
-    return products.filter((product) => {
-      return (
+  // Filter products on every debounced input change
+  useEffect(() => {
+    const lowerQuery = debouncedQuery.toLowerCase();
+    setFilteredProducts(
+      products.filter((product) =>
         product.title.toLowerCase().includes(lowerQuery) ||
         product.category.name.toLowerCase().includes(lowerQuery)
-      );
-    });
-  }, [query, products]);
+      )
+    );
+  }, [debouncedQuery, products]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -73,7 +80,8 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
           placeholder="Search products by title or category"
-          onValueChange={debouncedQuery}
+          value={query}
+          onValueChange={setQuery}
           autoFocus
         />
         <CommandList>
@@ -82,7 +90,7 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
             <CommandItem
               key={`${product.id ?? ''}-${product.title}-${index}`}
               onSelect={() => {
-                router.push(`/product/${product.title}`);
+                router.push(`/product/${product.id}`);
                 setOpen(false);
               }}
               className="cursor-pointer"

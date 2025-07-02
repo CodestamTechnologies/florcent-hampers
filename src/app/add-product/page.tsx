@@ -11,7 +11,6 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/providers/authProvider";
 import { useRouter } from "next/navigation";
 
-// Dummy file upload function
 const uploadFile = async (file: File): Promise<string> => {
     const apiKey = "57e5c2617e80c2dd29dc924d41564574";
     const formData = new FormData();

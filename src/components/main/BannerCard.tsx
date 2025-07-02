@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { categories, Category, Product } from '@/data'; // Adjust the import path as necessary
 import { useProducts } from "@/providers/productsProvider";

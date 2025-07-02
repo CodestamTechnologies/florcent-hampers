@@ -17,11 +17,14 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     const { category: cat } = use(params);
     const { products } = useProducts();
 
+
     const decodedSlug = decodeURIComponent(cat);
+
 
     const category = categories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
+
 
     if (!category) {
         notFound();
@@ -44,7 +47,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                             <p className="text-gray-600">{category.description}</p>
                         </div>
                         <Button
-                            onClick={() => router.push("/")}
+                            onClick={() => router.push('/')}
                             variant="outline"
                             className="mt-4 md:mt-0"
                         >
@@ -52,24 +55,12 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                         </Button>
                     </div>
 
-                    {/* Category Products Grid or Fallback Message */}
-                    {categoryProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {categoryProducts.map((product, i) => (
-                                <ProductCard product={product} key={i} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-20">
-                            <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-                                No products found in this category
-                            </h3>
-                            <p className="text-gray-500 max-w-md mx-auto">
-                                We're currently out of stock or still updating this category.
-                                Please check back soon or explore other categories!
-                            </p>
-                        </div>
-                    )}
+                    {/* Only show products for this category */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {categoryProducts.map((product, i) => (
+                            <ProductCard product={product} key={i} />
+                        ))}
+                    </div>
                 </div>
             </section>
         </div>
