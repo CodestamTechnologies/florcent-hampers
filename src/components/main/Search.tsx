@@ -32,7 +32,7 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
         product.category.name.toLowerCase().includes(lowerQuery)
       )
     );
-  }, [query, products]);
+  }, [products]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
