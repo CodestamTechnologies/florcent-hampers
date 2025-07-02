@@ -33,9 +33,9 @@ const FavoritesPage = () => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            {favorites.map((product) => (
+                            {favorites?.map((product, i) => (
                                 <ProductCard
-                                    key={product.id}
+                                    key={product.id + i}
                                     product={product}
                                 />
                             ))}

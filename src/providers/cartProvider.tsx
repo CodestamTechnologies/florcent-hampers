@@ -253,7 +253,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
             console.warn("User must be logged in to add to favorites.");
             return;
         }
-
         setFavorites((prevFavorites) => {
             if (prevFavorites.some((item) => item.id === product.id)) {
                 return prevFavorites; // Already in favorites

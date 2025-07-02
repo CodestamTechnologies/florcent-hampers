@@ -1,87 +1,104 @@
-"use client"
+"use client";
 
 import { Card } from "@/components/ui/card";
-import { categories, Category, Product } from '@/data'; // Adjust the import path as necessary
+import { categories, Category, Product } from "@/data"; // Adjust the import path as necessary
 import { useProducts } from "@/providers/productsProvider";
-import {
-    Gift,
-    RefreshCw,
-    ShieldCheck,
-    Truck
-} from 'lucide-react';
+import { Gift, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductCard from "../product-card";
 import Link from "next/link";
 
 const MainComponent = () => {
-    const { products } = useProducts();
+  const { products } = useProducts();
 
-    // Group products by category
-    const groupedProducts = categories.reduce((acc: { [key: string]: Product[] }, category: Category) => {
-        acc[category.name] = products.filter(product => product.category.name === category.name);
-        return acc;
-    }, {});
+  // Group products by category
+  const groupedProducts = categories.reduce(
+    (acc: { [key: string]: Product[] }, category: Category) => {
+      acc[category.name] = products.filter(
+        (product) => product.category.name === category.name
+      );
+      return acc;
+    },
+    {}
+  );
 
-
-    return (
-        <div className="flex flex-col min-h-screen bg-gray-50">
-            {/* Categories Section */}
-            <section className="py-16 px-6 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-                        <div>
-                            <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">Shop by Category</h2>
-                            <p className="text-gray-600">Find the perfect pieces for your style</p>
-                        </div>
-                        {/* <Button variant="outline" className="mt-4 md:mt-0">
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Categories Section */}
+      <section className="py-16 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">
+                Shop by Category
+              </h2>
+              <p className="text-gray-600">
+                Find the perfect pieces for your style
+              </p>
+            </div>
+            {/* <Button variant="outline" className="mt-4 md:mt-0">
                             View All Categories
                         </Button> */}
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        {categories.map((category) => (
-                            <Card key={category.id} className="text-center py-6 hover:shadow-md transition-shadow">
-                                <img
-                                    src={"https://maxm-imggenurl.web.val.run/" + category.name}
-                                    alt={category.name}
-                                    className="w-12 h-12 mx-auto mb-2 object-cover rounded-full"
-                                />
-                                <h3 className="font-medium mb-1">{category.name}</h3>
-                                <p className="text-sm text-gray-500">
-                                    {products.filter(product => product.category.name === category.name).length} products
-                                </p>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </section>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((category) => (
+              <Link href={`/${category.name.toLowerCase()}`} key={category.id}>
+                <Card
+                  key={category.id}
+                  className="text-center py-6 hover:shadow-md transition-shadow"
+                >
+                  <img
+                    src={"https://maxm-imggenurl.web.val.run/" + category.name}
+                    alt={category.name}
+                    className="w-12 h-12 mx-auto mb-2 object-cover rounded-full"
+                  />
+                  <h3 className="font-medium mb-1">{category.name}</h3>
+                  <p className="text-sm text-gray-500">
+                    {
+                      products.filter(
+                        (product) => product.category.name === category.name
+                      ).length
+                    }{" "}
+                    products
+                  </p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Products Grouped by Category */}
-            {categories.map((category) => {
-                const categoryProducts = groupedProducts[category.name];
-                if (categoryProducts.length === 0) return null; // Skip categories with no products
-                return (
-                    <section key={category.id} className="py-16 px-6 bg-gray-50">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-                                <div>
-                                    <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">{category.name}</h2>
-                                    <p className="text-gray-600">{category.description}</p>
-                                </div>
-                                <Link href={`/${category.name}`}>
-                                {/* <Button  variant="outline" className="mt-4 md:mt-0">
+      {/* Products Grouped by Category */}
+      {categories.map((category) => {
+        const categoryProducts = groupedProducts[category.name];
+        if (categoryProducts.length === 0) return null; // Skip categories with no products
+        return (
+          <section key={category.id} className="py-16 px-6 bg-gray-50">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">
+                    {category.name}
+                  </h2>
+                  <p className="text-gray-600">{category.description}</p>
+                </div>
+                <Link href={`/${category?.name}`}>
+                  {/* <Button  variant="outline" className="mt-4 md:mt-0">
                                     View All {category.name}
                                 </Button> */}
-                                </Link>
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {categoryProducts.map((product, i) => <ProductCard product={product} key={i} />)}
-                            </div>
-                        </div>
-                    </section>
-                );
-            })}
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {categoryProducts.map((product, i) => (
+                  <ProductCard product={product} key={i} />
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
-            {/* Collections Section */}
-            {/* <section className="py-16 px-6 bg-white">
+      {/* Collections Section */}
+      {/* <section className="py-16 px-6 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
@@ -117,36 +134,36 @@ const MainComponent = () => {
                 </div>
             </section> */}
 
-            {/* Features */}
-            <section className="py-16 px-6 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <Card className="p-6 text-center">
-                            <Truck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
-                            <h3 className="font-medium mb-2">Free Shipping</h3>
-                            <p className="text-gray-600 text-sm">On all orders over ₹1000</p>
-                        </Card>
-                        <Card className="p-6 text-center">
-                            <RefreshCw className="h-10 w-10 mx-auto mb-4 text-blue-600" />
-                            <h3 className="font-medium mb-2">Easy Returns</h3>
-                            <p className="text-gray-600 text-sm">30-day return policy</p>
-                        </Card>
-                        <Card className="p-6 text-center">
-                            <ShieldCheck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
-                            <h3 className="font-medium mb-2">Secure Payment</h3>
-                            <p className="text-gray-600 text-sm">Protected by encryption</p>
-                        </Card>
-                        <Card className="p-6 text-center">
-                            <Gift className="h-10 w-10 mx-auto mb-4 text-blue-600" />
-                            <h3 className="font-medium mb-2">Gift Cards</h3>
-                            <p className="text-gray-600 text-sm">Perfect for any occasion</p>
-                        </Card>
-                    </div>
-                </div>
-            </section>
+      {/* Features */}
+      <section className="py-16 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="p-6 text-center">
+              <Truck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
+              <h3 className="font-medium mb-2">Free Shipping</h3>
+              <p className="text-gray-600 text-sm">On all orders over ₹1000</p>
+            </Card>
+            <Card className="p-6 text-center">
+              <RefreshCw className="h-10 w-10 mx-auto mb-4 text-blue-600" />
+              <h3 className="font-medium mb-2">Easy Returns</h3>
+              <p className="text-gray-600 text-sm">30-day return policy</p>
+            </Card>
+            <Card className="p-6 text-center">
+              <ShieldCheck className="h-10 w-10 mx-auto mb-4 text-blue-600" />
+              <h3 className="font-medium mb-2">Secure Payment</h3>
+              <p className="text-gray-600 text-sm">Protected by encryption</p>
+            </Card>
+            <Card className="p-6 text-center">
+              <Gift className="h-10 w-10 mx-auto mb-4 text-blue-600" />
+              <h3 className="font-medium mb-2">Gift Cards</h3>
+              <p className="text-gray-600 text-sm">Perfect for any occasion</p>
+            </Card>
+          </div>
+        </div>
+      </section>
 
-            {/* Instagram Section */}
-            {/* <section className="py-16 px-6 bg-white">
+      {/* Instagram Section */}
+      {/* <section className="py-16 px-6 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-10">
                         <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">Follow Us @elegance</h2>
@@ -174,8 +191,8 @@ const MainComponent = () => {
                     </div>
                 </div>
             </section> */}
-        </div>
-    );
+    </div>
+  );
 };
 
 export default MainComponent;

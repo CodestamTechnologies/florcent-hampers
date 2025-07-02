@@ -57,13 +57,18 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const fetchData = async () => {
             try {
                 // Fetch products
+                
                 const productsSnapshot = await getDocs(collection(db, "products"));
+               
                 const productsData = productsSnapshot.docs.map((doc) => ({
-                    id: doc.id,
+                    
                     ...doc.data(),
-                })) as Product[];
-                setProducts(productsData);
+                    id: doc.id,
 
+                })) as Product[];
+
+               
+                setProducts(productsData);
                 // Fetch colors
                 const colorsSnapshot = await getDocs(collection(db, "colors"));
                 const colorsData = colorsSnapshot.docs.map((doc) => ({
