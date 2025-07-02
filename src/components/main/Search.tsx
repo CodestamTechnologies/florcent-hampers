@@ -8,8 +8,6 @@ import {
   CommandEmpty,
   CommandItem
 } from '@/components/ui/command';
-// import { Product } from '@/lib/types';
-import { useRouter } from 'next/navigation';
 import { useCart } from '@/providers/cartProvider';
 import { Product } from '@/data';
 
@@ -20,9 +18,7 @@ interface SearchProductsProps {
 const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const router = useRouter();
    const {
         openQuickView
     } = useCart();
@@ -36,7 +32,7 @@ const SearchProducts: React.FC<SearchProductsProps> = ({ products }) => {
         product.category.name.toLowerCase().includes(lowerQuery)
       )
     );
-  }, [debouncedQuery, products]);
+  }, [query, products]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

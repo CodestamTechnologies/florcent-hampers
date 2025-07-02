@@ -4,7 +4,7 @@ import { CartModal } from "@/components/main/cartDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/data"; // Adjust the import path as necessary
-import { Heart, RefreshCw, Star, Truck, X } from "lucide-react";
+import { Heart, RefreshCw, Star, Truck, } from "lucide-react";
 import React, {
   createContext,
   ReactNode,
