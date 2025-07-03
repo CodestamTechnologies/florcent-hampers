@@ -76,7 +76,7 @@ const MainComponent = () => {
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">
+                  <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">
                     {category.name}
                   </h2>
                   <p className="text-gray-600">{category.description}</p>
