@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PackageCheck } from "lucide-react";
+import {  PackageCheck } from "lucide-react";
 import { useCart } from "@/providers/cartProvider"; // adjust this if you have a different hook/provider
 import { format } from "date-fns";
+import Link from "next/link";
 
 const OrdersPage = () => {
     const { orders } = useCart(); // or use your actual orders fetching logic
@@ -17,9 +18,11 @@ const OrdersPage = () => {
                             <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">My Orders</h2>
                             <p className="text-gray-600">Track your recent purchases</p>
                         </div>
-                        <Button variant="outline" className="mt-4 md:mt-0" onClick={() => window.history.back()}>
+                       <Link href="/" className="flex items-center">
+                        <Button variant="outline" className="mt-4 md:mt-0" >
                             Back to Shopping
                         </Button>
+                       </Link>
                     </div>
 
                     {orders.length === 0 ? (

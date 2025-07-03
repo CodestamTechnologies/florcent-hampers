@@ -138,7 +138,7 @@ const CartPage = () => {
 
                         {/* Cart Summary */}
                         <div className="lg:col-span-1">
-                            <div className="sticky top-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                            <div className="sticky top-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm w-full">
                                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h2>
                                 {/* Free Shipping Progress */}
                                 <div className="space-y-2 mb-4">
@@ -176,7 +176,7 @@ const CartPage = () => {
                                             Proceed to Checkout
                                         </Button>
                                     </Link>
-                                    <div className="flex gap-2 mt-6">
+                                    <div className="flex lg:flex-col gap-2 mt-6 ">
                                         <Link href="/" className="flex-1">
                                             <Button
                                                 variant="outline"

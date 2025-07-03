@@ -4,7 +4,7 @@ import { CartModal } from "@/components/main/cartDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/data"; // Adjust the import path as necessary
-import { Heart, RefreshCw, Star, Truck, } from "lucide-react";
+import { Heart, RefreshCw, Star, Truck } from "lucide-react";
 import React, {
   createContext,
   ReactNode,
@@ -30,8 +30,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-
+} from "@/components/ui/dialog";
 
 // Define the shape of a cart item
 export interface CartItem {
@@ -94,9 +93,7 @@ export const calculateDiscountedPrice = (
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [favorites, setFavorites] = useState<Product[]>([]);
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
-    null
-  );
+  
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, openLoginModal } = useAuth();
@@ -294,6 +291,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const addToFavorites = async (product: Product) => {
     if (!user) {
       console.warn("User must be logged in to add to favorites.");
+      toast.error("Please log in to add items to your favourite.", {
+        action: {
+          label: "Login",
+          onClick: () => openLoginModal(),
+        },
+      });
       return;
     }
     setFavorites((prevFavorites) => {
@@ -318,7 +321,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       return newFavorites;
     });
   };
-
+const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
+    null
+  );
   // Function to open the quick view modal
   const openQuickView = (product: Product) => {
     setQuickViewProduct(product);
@@ -354,171 +359,183 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, []);
 
   // Quick View Modal component
-  const QuickViewModal = () =>
-    quickViewProduct && (
-      <Dialog open={!!quickViewProduct} onOpenChange={closeQuickView} >
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto p-6">
-          <DialogHeader className="flex justify-between items-center">
-            <DialogTitle className="text-xl font-semibold">
-              {quickViewProduct.title}
-            </DialogTitle>
-           
-          </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            {/* Left: Image */}
-            <div>
-              <img
-                src={quickViewProduct.images[0]}
-                alt={quickViewProduct.title}
-                className="w-full h-auto object-cover rounded-md"
-              />
-            </div>
-
-            {/* Right: Product Info */}
-            <div>
-              <Badge className="mb-2">{quickViewProduct.category.name}</Badge>
-              <h2 className="text-2xl font-serif font-medium mb-2">
+  const QuickViewModal = () => {
+  return (
+    <Dialog open={!!quickViewProduct} onOpenChange={closeQuickView} >
+      <DialogContent className=" min-w-[70vw] max-h-[90vh] overflow-auto p-4 md:p-6">
+        {quickViewProduct  &&  (
+          <>
+            <DialogHeader className="flex justify-between items-center">
+              <DialogTitle className="text-xl font-semibold">
                 {quickViewProduct.title}
-              </h2>
+              </DialogTitle>
+            </DialogHeader>
 
-              <div className="flex items-center mb-4">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                <span className="text-sm ml-1">{quickViewProduct.ratings}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              {/* Left: Image */}
+              <div>
+                <img
+                  src={quickViewProduct.images[0]}
+                  alt={quickViewProduct.title}
+                  className="w-full h-auto object-cover rounded-md"
+                />
               </div>
 
-              <p className="text-gray-600 mb-4">
-                {quickViewProduct.description}
-              </p>
+              {/* Right: Product Info */}
+              <div>
+                <Badge className="mb-2">{quickViewProduct.category.name}</Badge>
+                <h2 className="text-2xl font-serif font-medium mb-2">
+                  {quickViewProduct.title}
+                </h2>
 
-              {/* Pricing */}
-              <div className="flex items-center mb-6">
-                <span className="text-xl font-medium">
-                  $
-                  {quickViewProduct.discount
-                    ? calculateDiscountedPrice(
-                        quickViewProduct.priceBeforeDiscount,
-                        quickViewProduct.discount
-                      ).toFixed(2)
-                    : quickViewProduct.priceBeforeDiscount.toFixed(2)}
-                </span>
-                {quickViewProduct.discount && (
-                  <>
-                    <span className="text-gray-400 line-through text-base ml-2">
-                      ${quickViewProduct.priceBeforeDiscount.toFixed(2)}
-                    </span>
-                    <Badge className="ml-2 bg-rose-100 text-rose-800">
-                      {quickViewProduct.discount}
-                    </Badge>
-                  </>
-                )}
-              </div>
-
-              {/* Colors */}
-              <div className="mb-4">
-                <h3 className="text-sm font-medium mb-2">Colors</h3>
-                <div className="flex gap-2">
-                  {quickViewProduct.colors.map((color, idx) => (
-                    <Button
-                      key={idx}
-                      variant="outline"
-                      size="sm"
-                      className="border-2 hover:bg-gray-50"
-                    >
-                      {color.name}
-                    </Button>
-                  ))}
+                <div className="flex items-center mb-4">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <span className="text-sm ml-1">
+                    {quickViewProduct.ratings}
+                  </span>
                 </div>
-              </div>
 
-              {/* Subcategories */}
-              <div className="mb-4">
-                <h3 className="text-sm font-medium mb-2">Subcategories</h3>
-                <div className="flex gap-2">
-                  {quickViewProduct.subCategories.map((sub, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">
-                      {sub.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div className="mb-4">
-                <h3 className="text-sm font-medium mb-2">Tags</h3>
-                <div className="flex gap-2">
-                  {quickViewProduct.tags.map((tag, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Collection */}
-              <div className="mb-4">
-                <h3 className="text-sm font-medium mb-2">Collection</h3>
-                <p className="text-gray-600">
-                  {quickViewProduct.collection.name}
+                <p className="text-gray-600 mb-4">
+                  {quickViewProduct.description}
                 </p>
-              </div>
 
-              {/* CTA Buttons */}
-              <div className="flex gap-4 mb-4">
-                <Button
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
-                  onClick={async () => {
-                    await addToCart(quickViewProduct);
-                    closeQuickView();
-                  }}
-                  disabled={!user || loading}
-                >
-                  Add to Cart
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex gap-2 items-center"
-                  onClick={async () => {
-                    const isFavorited = favorites.some(
-                      (fav) => fav.id === quickViewProduct.id
-                    );
-                    if (isFavorited) {
-                      await removeFromFavorites(quickViewProduct.id);
-                    } else {
-                      await addToFavorites(quickViewProduct);
-                    }
-                  }}
-                  disabled={!user || loading}
-                >
-                  <Heart
-                    className={`h-4 w-4 ${
-                      favorites.some((fav) => fav.id === quickViewProduct.id)
-                        ? "fill-red-500 text-red-500"
-                        : ""
-                    }`}
-                  />
-                  {favorites.some((fav) => fav.id === quickViewProduct.id)
-                    ? "Remove"
-                    : "Save"}
-                </Button>
-              </div>
-
-              {/* Shipping Info */}
-              <div className="border-t mt-6 pt-4">
-                <div className="flex items-center gap-2 text-sm mb-2">
-                  <Truck className="h-4 w-4 text-blue-600" />
-                  <span>Free shipping on orders over $100</span>
+                {/* Pricing */}
+                <div className="flex items-center mb-6">
+                  <span className="text-xl font-medium">
+                    $
+                    {quickViewProduct.discount
+                      ? calculateDiscountedPrice(
+                          quickViewProduct.priceBeforeDiscount,
+                          quickViewProduct.discount
+                        ).toFixed(2)
+                      : quickViewProduct.priceBeforeDiscount.toFixed(2)}
+                  </span>
+                  {quickViewProduct.discount && (
+                    <>
+                      <span className="text-gray-400 line-through text-base ml-2">
+                        ${quickViewProduct.priceBeforeDiscount.toFixed(2)}
+                      </span>
+                      <Badge className="ml-2 bg-rose-100 text-rose-800">
+                        {quickViewProduct.discount}
+                      </Badge>
+                    </>
+                  )}
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <RefreshCw className="h-4 w-4 text-blue-600" />
-                  <span>Free returns within 30 days</span>
+
+                {/* Colors */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Colors</h3>
+                  <div className="flex gap-2">
+                    {quickViewProduct.colors.map((color, idx) => (
+                      <Button
+                        key={idx}
+                        variant="outline"
+                        size="sm"
+                        className="border-2 hover:bg-gray-50"
+                      >
+                        {color.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subcategories */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Subcategories</h3>
+                  <div className="flex gap-2">
+                    {quickViewProduct.subCategories.map((sub, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">
+                        {sub.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Tags</h3>
+                  <div className="flex gap-2">
+                    {quickViewProduct.tags.map((tag, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Collection */}
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Collection</h3>
+                  <p className="text-gray-600">
+                    {quickViewProduct.collection.name}
+                  </p>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex gap-4 mb-4">
+                  <Button
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    onClick={async () => {
+                      await addToCart(quickViewProduct);
+                    }}
+                    disabled={!user || loading}
+                  >
+                    Add to Cart
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex gap-2 items-center"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const isFavorited = favorites.some(
+                        (fav) => fav.id === quickViewProduct.id
+                      );
+                      try {
+                        if (isFavorited) {
+                          await removeFromFavorites(quickViewProduct.id);
+                        } else {
+                          await addToFavorites(quickViewProduct);
+                        }
+                      } catch (err) {
+                        console.error("Favorite action failed", err);
+                      }
+                    }}
+                    disabled={!user || loading}
+                  >
+                    <Heart
+                      className={`h-4 w-4 ${
+                        favorites.some((fav) => fav.id === quickViewProduct.id)
+                          ? "fill-red-500 text-red-500"
+                          : ""
+                      }`}
+                    />
+                    {favorites.some((fav) => fav.id === quickViewProduct.id)
+                      ? "Remove"
+                      : "Save"}
+                  </Button>
+                </div>
+
+                {/* Shipping Info */}
+                <div className="border-t mt-6 pt-4">
+                  <div className="flex items-center gap-2 text-sm mb-2">
+                    <Truck className="h-4 w-4 text-blue-600" />
+                    <span>Free shipping on orders over $100</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <RefreshCw className="h-4 w-4 text-blue-600" />
+                    <span>Free returns within 30 days</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 
   return (
     <CartContext.Provider
