@@ -403,7 +403,7 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                 {/* Pricing */}
                 <div className="flex items-center mb-6">
                   <span className="text-xl font-medium">
-                    $
+                    ₹
                     {quickViewProduct.discount
                       ? calculateDiscountedPrice(
                           quickViewProduct.priceBeforeDiscount,
@@ -414,7 +414,7 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                   {quickViewProduct.discount && (
                     <>
                       <span className="text-gray-400 line-through text-base ml-2">
-                        ${quickViewProduct.priceBeforeDiscount.toFixed(2)}
+                        ₹{quickViewProduct.priceBeforeDiscount.toFixed(2)}
                       </span>
                       <Badge className="ml-2 bg-rose-100 text-rose-800">
                         {quickViewProduct.discount}
