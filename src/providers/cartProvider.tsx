@@ -479,7 +479,7 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                     onClick={async () => {
                       await addToCart(quickViewProduct);
                     }}
-                    disabled={!user || loading}
+                    // disabled={!user || loading}
                   >
                     Add to Cart
                   </Button>
@@ -501,7 +501,7 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                         console.error("Favorite action failed", err);
                       }
                     }}
-                    disabled={!user || loading}
+                    // disabled={!user || loading}
                   >
                     <Heart
                       className={`h-4 w-4 ${
