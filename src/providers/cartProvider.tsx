@@ -95,7 +95,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [favorites, setFavorites] = useState<Product[]>([]);
   
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { user, openLoginModal } = useAuth();
   // Calculate total cart and favorites count
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -121,7 +120,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     if (!user) {
       setCartItems([]);
       setFavorites([]);
-      setLoading(false);
       return;
     }
 
@@ -139,11 +137,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         } else {
           setCartItems([]);
         }
-        setLoading(false);
       },
       (error) => {
         console.error("Error syncing cart from Firestore:", error);
-        setLoading(false);
       }
     );
 
