@@ -77,16 +77,28 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     { name: "Favorites", icon: <Heart className="h-4 w-4 mr-2" />, count: favoritesCount, onClick: () => router.push("/favourites") },
     { name: "My Cart", icon: <ShoppingCart className="h-4 w-4 mr-2" />, count: cartCount, onClick: () => router.push("/cart") },
     { name: "Orders", icon: <LayoutDashboard className="h-4 w-4 mr-2" />, onClick: () => router.push("/orders") },
-    {
-      name: "Add Product", icon: <Plus className="h-4 w-4 mr-2" />, onClick: () => router.push("/add-product"),
-      isHidden: !allowedEmails.includes(user?.email || ""),
-    },
-    {
-      name: "Delete Product", icon: <Trash className="h-4 w-4 mr-2" />, onClick: () => router.push("/delete-product"),
-      isHidden: !allowedEmails.includes(user?.email || ""),
-    },
+    
+   
   ];
 
+  const adminPanel = [
+    {
+      name: "Users",
+      icon: <Plus className="h-4 w-4 mr-2" />,
+      link: "/users",
+    },
+
+    {
+      name: "Add Product",
+      icon: <Plus className="h-4 w-4 mr-2" />,
+      link: "/add-product",
+    },
+    {
+      name: "All Product",
+      icon: <Trash className="h-4 w-4 mr-2" />,
+      link: "/all-product",
+    },
+  ];
   return (
     <aside
       ref={sidebarRef}
@@ -104,16 +116,44 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       <div className="h-full flex flex-col overflow-y-auto custom-scrollbar">
         {/* Logo */}
         <div className="px-6 text-center py-4 flex items-center justify-center">
-  <Image
-    src='/flore2.png'
-    alt="Florcent & Hampers" 
-    width={170} // adjust as needed
-    height={10} // adjust as needed
-    className="object-contain text-center flex items-center-safe justify-center"
-  />
-</div>
+          <Image
+            src='/flore2.png'
+            alt="Florcent & Hampers"
+            width={170} // adjust as needed
+            height={10} // adjust as needed
+            className="object-contain text-center flex items-center-safe justify-center"
+          />
+        </div>
         <Separator />
-
+        {allowedEmails.includes(user?.email || "") && (
+          <div className="px-6 pt-4">
+            <h2 className="font-semibold text-xl  tracking-tight">
+              Admin Panel
+            </h2>
+          </div>
+        )}
+        {allowedEmails.includes(user?.email || "") && (
+          <div className="space-y-1 p-2 ml-3 ">
+            {adminPanel.map((category) => (
+              <Link
+                key={category.name}
+                href={category.link}
+                className={buttonVariants({
+                  variant: "ghost",
+                  className:
+                    "w-full flex justify-start font-medium text-sm  gap-3 my-1 ",
+                })}
+              >
+                {/* <img
+                  src={category.img || ""}
+                  alt={category.name}
+                  className="w-7 h-7  object-cover rounded-full"
+                /> */}
+                <p className="">{category.name}</p>
+              </Link>
+            ))}
+          </div>
+        )}
         {/* Explore */}
         <div className="px-6 pt-4">
           <h2 className="font-bold text-xl text-gray-900 tracking-tight">Explore</h2>
@@ -144,7 +184,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         <div className="px-4 pt-4">
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Access</h3>
           <div className="space-y-1">
-            {quickLinks.map((link) => !link.isHidden && (
+            {quickLinks.map((link) =>  (
               <Button
                 key={link.name}
                 variant="ghost"
