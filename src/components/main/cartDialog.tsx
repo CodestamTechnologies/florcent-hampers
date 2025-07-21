@@ -167,7 +167,7 @@ export const CartModal = ({
 
                 {/* Footer (for non-empty cart) */}
                 {cartItems.length > 0 && (
-                    <DialogFooter className="p-6 border-t border-gray-200 bg-gray-50 sticky bottom-0">
+                    <DialogFooter className="p-6 border-t border-gray-200 bg-gray-50  bottom-0">
                         <div className="w-full space-y-4">
                             {/* Free Shipping Progress */}
                             <div className="space-y-2">
