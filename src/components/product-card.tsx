@@ -7,6 +7,7 @@ import { Product } from "@/data";
 import { useCart } from "@/providers/cartProvider";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type ProductCardProps = {
   product: Product;
@@ -43,8 +44,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setLoading(true);
     if (isFavorite) {
       await removeFromFavorites(product?.id);
+                            toast.success("Items added to favourite")
+      
     } else {
       await addToFavorites(product);
+                            toast.success("Items removed from favourite")
+      
     }
     setLoading(false);
   };
@@ -87,7 +92,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button
             size="icon"
             className="rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
-            onClick={() => addToCart(product)}
+            onClick={() => {addToCart(product)
+              toast.success("Items added to cart")
+              
+            }}
           >
             <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
@@ -189,7 +197,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Button
               size="icon"
               className="rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
-              onClick={() => addToCart(product)}
+              onClick={async() => {
+                addToCart(product)
+                toast.success("Items added to cart")
+
+                }
+              }
+
             >
               <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
