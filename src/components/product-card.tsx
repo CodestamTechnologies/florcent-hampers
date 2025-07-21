@@ -44,11 +44,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setLoading(true);
     if (isFavorite) {
       await removeFromFavorites(product?.id);
-                            toast.success("Items added to favourite")
+                            toast.success("Items removed from  favourite")
       
     } else {
       await addToFavorites(product);
-                            toast.success("Items removed from favourite")
+                            toast.success("Items added to favourite")
       
     }
     setLoading(false);
