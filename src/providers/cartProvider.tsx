@@ -474,6 +474,8 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                     className="flex-1 bg-blue-600 hover:bg-blue-700"
                     onClick={async () => {
                       await addToCart(quickViewProduct);
+                      toast.success("Items added to cart")
+
                     }}
                     // disabled={!user || loading}
                   >
@@ -490,8 +492,11 @@ const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
                       try {
                         if (isFavorited) {
                           await removeFromFavorites(quickViewProduct.id);
+                          toast.success("Items removed from favourite")
                         } else {
                           await addToFavorites(quickViewProduct);
+                          toast.success("Items added to favourite")
+
                         }
                       } catch (err) {
                         console.error("Favorite action failed", err);
