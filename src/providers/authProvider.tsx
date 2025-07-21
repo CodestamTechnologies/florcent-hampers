@@ -10,7 +10,7 @@ import {
     createUserWithEmailAndPassword,
     signOut,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { Clock, Mail, Loader2 } from "lucide-react";
 import {
     Dialog,
@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { Order } from "@/lib/types";
 
 // Define types for Firestore user data
 interface FirestoreUserData {
@@ -41,10 +42,19 @@ interface FirestoreUserData {
     lastLogin: string;
     createdAt: string;
 }
-
+interface FirestoreUserwithOrderData {
+    uid: string;
+    email: string | null;
+    displayName: string | null;
+    photoURL: string | null;
+    lastLogin: string;
+    createdAt: string;
+    orders?: Order[];
+}
 // Define types for the context
 interface AuthContextType {
     user: User | null;
+    allusers: FirestoreUserwithOrderData[];
     loading: boolean;
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<void>;
@@ -289,6 +299,7 @@ const LoginModal = ({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [allusers, setAllUser] = useState<FirestoreUserwithOrderData[]>([]);
     const [firestoreUserData, setFirestoreUserData] = useState<FirestoreUserData | null>(null);
     const [loading, setLoading] = useState(true);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -296,7 +307,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const getAllUsersandtheirOrders = async () => {
+        const usersCol = collection(db, "users");
+        const usersSnapshot = await getDocs(usersCol);
 
+        const usersList: FirestoreUserData[] = await Promise.all(
+            usersSnapshot.docs.map(async (doc) => {
+                const data = doc.data();
+
+                // Fetch user's orders
+                const ordersRef = collection(db, "orders");
+                const q = query(ordersRef, where("email", "==", data.email));
+                const ordersSnapshot = await getDocs(q);
+                const orders = ordersSnapshot.docs.map((orderDoc) => ({
+                    id: orderDoc.id,
+                    ...orderDoc.data(),
+                }));
+
+                return {
+                    uid: data.uid,
+                    email: data.email,
+                    displayName: data.displayName,
+                    photoURL: data.photoURL,
+                    lastLogin: data.lastLogin,
+                    createdAt: data.createdAt,
+                    orders: orders, // Add orders array here
+                } as FirestoreUserData;
+            })
+        );
+
+        setAllUser(usersList);
+    };
     // Save user details to Firestore with custom name and image
     const saveUserToFirestore = async (user: User) => {
         const emailName = user.email?.split("@")[0] || "Unknown";
@@ -331,6 +372,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Listen to auth state changes and fetch from Firestore
     useEffect(() => {
+        getAllUsersandtheirOrders();
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
             if (user) {
@@ -426,6 +468,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const value = {
         user,
+        allusers,
         loading,
         signInWithGoogle,
         signInWithEmail,

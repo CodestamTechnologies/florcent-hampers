@@ -103,7 +103,40 @@ export const categories: Category[] = [
         image: "/api/placeholder/400/200",
     },
 ];
-
+export interface AdminPanel {
+    id: string;
+    name: string;
+    description: string;
+    image: string;
+}
+export const admin: AdminPanel[] = [
+  {
+    id: "cat1",
+    name: "Users",
+    description: "Chic western outfits for the modern woman—perfect for casual and party wear.",
+    image: "/api/placeholder/400/200",
+  },
+  {
+    id: "cat2",
+    name: "Users Orders",
+    description: "Graceful and timeless sarees designed for elegance and tradition.",
+    image: "/api/placeholder/400/200",
+  },
+  {
+    id: "cat3",
+    name: "Add Product",
+    description: "Comfortable and stylish kurtis for daily wear, office, or outings.",
+    image: "/api/placeholder/400/200",
+  },
+  {
+    id: "cat4",
+    name: "All Product",
+    description: "Dazzling lehengas perfect for weddings, festivals, and grand occasions.",
+    image: "/api/placeholder/400/200",
+  },
+ 
+  
+];
 
 // Collections Data
 export const collections: Collection[] = [
