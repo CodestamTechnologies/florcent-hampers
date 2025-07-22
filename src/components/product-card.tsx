@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Product } from "@/data";
+import { useAuth } from "@/providers/authProvider";
 import { useCart } from "@/providers/cartProvider";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
@@ -15,6 +16,8 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const [loading, setLoading] = useState(false);
+   const { user } = useAuth();
+
   const {
     addToCart,
     favorites,
@@ -42,14 +45,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleToggleFavorite = async () => {
     setLoading(true);
-    if (isFavorite) {
-      await removeFromFavorites(product?.id);
-                            toast.success("Items removed from  favourite")
-      
-    } else {
-      await addToFavorites(product);
-                            toast.success("Items added to favourite")
-      
+    if (!user) {
+      toast.error("Please log in to add items to favourite")
+    }
+    else {
+      if (isFavorite) {
+        await removeFromFavorites(product?.id);
+        toast.error("item removed to favourite")
+
+      } else {
+        await addToFavorites(product);
+        toast.success("item added to favourite")
+
+      }
     }
     setLoading(false);
   };
@@ -77,24 +85,26 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button
             size="icon"
             variant="secondary"
-            className={`rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100 ${
-              isFavorite ? "text-red-500" : ""
-            }`}
+            className={`rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100 ${isFavorite ? "text-red-500" : ""
+              }`}
             onClick={handleToggleFavorite}
             disabled={disableFavoriteButton || loading}
           >
             <Heart
-              className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                isFavorite ? "fill-red-500" : ""
-              }`}
+              className={`h-3 w-3 sm:h-4 sm:w-4 ${isFavorite ? "fill-red-500" : ""
+                }`}
             />
           </Button>
           <Button
             size="icon"
             className="rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
-            onClick={() => {addToCart(product)
-              toast.success("Items added to cart")
-              
+            onClick={async() => {
+                if (!user) {
+                  toast.error("Please log in to add items to cart")
+                } else {
+                  await addToCart(product);
+                  toast.success("item added to cart")
+                }
             }}
           >
             <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -182,26 +192,27 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Button
               size="icon"
               variant="secondary"
-              className={`rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100 ${
-                isFavorite ? "text-red-500" : ""
-              }`}
+              className={`rounded-full bg-white text-gray-700 shadow-md hover:bg-gray-100 ${isFavorite ? "text-red-500" : ""
+                }`}
               onClick={handleToggleFavorite}
               disabled={disableFavoriteButton || loading}
             >
               <Heart
-                className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                  isFavorite ? "fill-red-500" : ""
-                }`}
+                className={`h-3 w-3 sm:h-4 sm:w-4 ${isFavorite ? "fill-red-500" : ""
+                  }`}
               />
             </Button>
             <Button
               size="icon"
               className="rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
-              onClick={async() => {
-                addToCart(product)
-                toast.success("Items added to cart")
-
+              onClick={async () => {
+                 if (!user) {
+                  toast.error("Please log in to add items to cart")
+                } else {
+                  await addToCart(product);
+                  toast.success("item added to cart")
                 }
+              }
               }
 
             >
