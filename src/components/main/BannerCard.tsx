@@ -1,17 +1,17 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { categories, Category, Product } from "@/data"; // Adjust the import path as necessary
+import {  Category, Product } from "@/data"; // Adjust the import path as necessary
 import { useProducts } from "@/providers/productsProvider";
 import { Gift, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductCard from "../product-card";
 import Link from "next/link";
 
 const MainComponent = () => {
-  const { products } = useProducts();
+  const { products ,dbCategories} = useProducts();
 
   // Group products by category
-  const groupedProducts = categories.reduce(
+  const groupedProducts = dbCategories.reduce(
     (acc: { [key: string]: Product[] }, category: Category) => {
       acc[category.name] = products.filter(
         (product) => product.category.name === category.name
@@ -40,7 +40,7 @@ const MainComponent = () => {
                         </Button> */}
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((category) => (
+            {dbCategories.map((category) => (
               <Link href={`/${category.name.toLowerCase()}`} key={category.id}>
                 <Card
                   key={category.id}
@@ -68,7 +68,7 @@ const MainComponent = () => {
       </section>
 
       {/* Products Grouped by Category */}
-      {categories.map((category) => {
+      {dbCategories.map((category) => {
         const categoryProducts = groupedProducts[category.name];
         if (categoryProducts.length === 0) return null; // Skip categories with no products
         return (

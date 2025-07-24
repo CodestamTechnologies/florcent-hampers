@@ -122,7 +122,6 @@ const AllProduct = () => {
             setIsDeleting(false);
         }
     };
-    console.log(productToEdit);
     const handleProductImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) setProductImageFiles(e.target.files);
     };
