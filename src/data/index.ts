@@ -52,57 +52,7 @@ export interface Product {
     subCategories: SubCategory[];
 }
 
-// Categories Data
-export const categories: Category[] = [
-    {
-        id: "cat1",
-        name: "Gifts",
-        description: "Thoughtful presents for every occasion",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat2",
-        name: "Hampers",
-        description: "Curated hampers packed with surprises",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat3",
-        name: "Baskets",
-        description: "Handcrafted baskets for every need",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat4",
-        name: "Poshak",
-        description: "Traditional attire with modern elegance",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat5",
-        name: "Soft Toys",
-        description: "Adorable plushies for all ages",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat6",
-        name: "Bhandarwals",
-        description: "Decorative hangings to brighten your space",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat7",
-        name: "Diwali Items",
-        description: "Festive essentials to light up your Diwali",
-        image: "/api/placeholder/400/200",
-    },
-    {
-        id: "cat8",
-        name: "Envelope n potlis",
-        description: "Premium envelopes and potlis to elevate your gifting game",
-        image: "/api/placeholder/400/200",
-    },
-];
+
 export interface AdminPanel {
     id: string;
     name: string;
@@ -131,6 +81,13 @@ export const admin: AdminPanel[] = [
   {
     id: "cat4",
     name: "All Product",
+    description: "Dazzling lehengas perfect for weddings, festivals, and grand occasions.",
+    image: "/api/placeholder/400/200",
+  },
+ 
+  {
+    id: "cat4",
+    name: "All Product Category",
     description: "Dazzling lehengas perfect for weddings, festivals, and grand occasions.",
     image: "/api/placeholder/400/200",
   },

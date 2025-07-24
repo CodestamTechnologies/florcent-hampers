@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Product, categories, collections } from "@/data";
+import { Category, Product,  collections } from "@/data";
 
 // Types
 interface Color {
@@ -23,10 +23,12 @@ interface ProductsContextType {
     products: Product[];
     colors: Color[];
     subCollections: SubCategory[];
-    categories: typeof categories;
+    dbCategories: Category[];
+    // categories: typeof categories;
     collections: typeof collections;
     addProduct: (product: Omit<Product, "id" | "ratings">) => Promise<void>;
     uploadFile: (file: File) => Promise<string>;
+    categoriesLoaded: boolean;
 }
 
 // Context
@@ -51,23 +53,48 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [products, setProducts] = useState<Product[]>([]);
     const [colors, setColors] = useState<Color[]>([]);
     const [subCollections, setSubCollections] = useState<SubCategory[]>([]);
+    const [dbCategories, setDbCategories] = useState<Category[]>([]);
+    const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+    
 
+    
+    // Fetch colors and sub-collections from Firestore
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setCategoriesLoaded(true);
+                const newCategoriesdata = await getDocs(collection(db, "Categories"));
+                const categoriesData = newCategoriesdata.docs.map((doc) => ({
+                    id: doc.id,
+                    name: doc.data().name as string,
+                    description: doc.data().description as string,
+                    image: (doc.data().image as string) || "",
+                }));
+                setDbCategories(categoriesData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setCategoriesLoaded(false);
+            }
+        };
+        fetchData();
+    }, []);
     // Fetch data from Firestore
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Fetch products
-                
+
                 const productsSnapshot = await getDocs(collection(db, "products"));
-               
+
                 const productsData = productsSnapshot.docs.map((doc) => ({
-                    
+
                     ...doc.data(),
                     id: doc.id,
 
                 })) as Product[];
 
-               
+
                 setProducts(productsData);
                 // Fetch colors
                 const colorsSnapshot = await getDocs(collection(db, "colors"));
@@ -112,10 +139,12 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 products,
                 colors,
                 subCollections,
-                categories,
+                dbCategories,
+                // categories,
                 collections,
                 addProduct,
                 uploadFile,
+                categoriesLoaded
             }}
         >
             {children}

@@ -4,18 +4,11 @@ import { useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  Gift,
   Heart,
   LayoutDashboard,
-  Package,
   Plus,
-  Shirt,
-  ShoppingBasket,
   ShoppingCart,
-  Sparkles,
-  ToyBrick,
   Trash,
-  WalletCards,
 } from "lucide-react";
 import { useCart } from "@/providers/cartProvider";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +16,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/providers/authProvider";
 import Image from "next/image";
+import { useProducts } from "@/providers/productsProvider";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -34,7 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   const pathname = usePathname();
   const { user } = useAuth();
   const { cartCount, favoritesCount } = useCart();
-
+  const { dbCategories, } = useProducts();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -60,25 +54,15 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     };
   }, [isOpen]);
 
-  const categories = [
-    { name: "Home", link: "/", icon: <LayoutDashboard className="h-4 w-4 mr-3" /> },
-    { name: "Gifts", link: "/gifts", icon: <Gift className="h-4 w-4 mr-3" /> },
-    { name: "Hampers", link: "/hampers", icon: <Package className="h-4 w-4 mr-3" />, isNew: true },
-    { name: "Baskets", link: "/baskets", icon: <ShoppingBasket className="h-4 w-4 mr-3" /> },
-    { name: "Poshak", link: "/poshak", icon: <Shirt className="h-4 w-4 mr-3" /> },
-    { name: "Soft Toys", link: "/soft-toys", icon: <ToyBrick className="h-4 w-4 mr-3" />, isNew: true },
-    { name: "Bhandarwals", link: "/bhandarwals", icon: <Sparkles className="h-4 w-4 mr-3" /> },
-    { name: "Diwali Items", link: "/diwali-items", icon: <Sparkles className="h-4 w-4 mr-3" />, isNew: true },
-    { name: "Envelope n potlis", link: "/envelope-n-potlis", icon: <WalletCards className="h-4 w-4 mr-3" />, isNew: true },
-  ];
+
 
   const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
   const quickLinks = [
     { name: "Favorites", icon: <Heart className="h-4 w-4 mr-2" />, count: favoritesCount, onClick: () => router.push("/favourites") },
     { name: "My Cart", icon: <ShoppingCart className="h-4 w-4 mr-2" />, count: cartCount, onClick: () => router.push("/cart") },
     { name: "Orders", icon: <LayoutDashboard className="h-4 w-4 mr-2" />, onClick: () => router.push("/orders") },
-    
-   
+
+
   ];
 
   const adminPanel = [
@@ -97,6 +81,11 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       name: "All Product",
       icon: <Trash className="h-4 w-4 mr-2" />,
       link: "/all-product",
+    },
+    {
+      name: "All Product Category",
+      icon: <Trash className="h-4 w-4 mr-2" />,
+      link: "/all-product-category",
     },
   ];
   return (
@@ -160,22 +149,30 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         </div>
 
         <div className="space-y-1 p-2">
-          {categories.map((category) => (
+          <Link
+            href='/'
+            className={buttonVariants({
+              variant: "ghost",
+              className: "w-full justify-start font-medium text-sm",
+            })}
+          >
+            {/* <img src={category.image} alt={category.name} className="w-6 h-6 mr-2" /> */}
+            <LayoutDashboard className="h-4 w-4 m-3" />
+            Home
+
+          </Link>
+          {dbCategories.map((category) => (
             <Link
               key={category.name}
-              href={category.link}
+              href={category.name.toLowerCase().replace(/\s+/g, "-")}
               className={buttonVariants({
                 variant: "ghost",
                 className: "w-full justify-start font-medium text-sm",
               })}
             >
-              {category.icon}
+              <img src={category.image} alt={category.name} className="w-6 h-6 mr-2" />
               {category.name}
-              {category.isNew && (
-                <Badge variant="secondary" className="ml-2 text-xs bg-blue-100 text-blue-700">
-                  New
-                </Badge>
-              )}
+
             </Link>
           ))}
         </div>
@@ -184,7 +181,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         <div className="px-4 pt-4">
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick Access</h3>
           <div className="space-y-1">
-            {quickLinks.map((link) =>  (
+            {quickLinks.map((link) => (
               <Button
                 key={link.name}
                 variant="ghost"

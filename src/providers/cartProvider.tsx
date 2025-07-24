@@ -114,7 +114,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       orderBy("createdAt", "desc")
     );
   };
-
+  
   // Sync cart with Firestore
   useEffect(() => {
     if (!user) {

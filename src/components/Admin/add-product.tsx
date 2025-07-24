@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { Product, categories, collections } from "@/data";
+import { Product, collections } from "@/data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/providers/authProvider";
 
-const uploadFile = async (file: File): Promise<string> => {
+export const uploadFile = async (file: File): Promise<string> => {
     const apiKey = "57e5c2617e80c2dd29dc924d41564574";
     const formData = new FormData();
     formData.append("image", file);
@@ -30,6 +30,12 @@ interface Color {
 }
 
 interface SubCategory {
+    id: string;
+    name: string;
+    description: string;
+    image: string;
+}
+interface Category {
     id: string;
     name: string;
     description: string;
@@ -55,10 +61,17 @@ const AddProduct = () => {
     // Sub-collections state
     const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
     const [dbSubCollections, setDbSubCollections] = useState<SubCategory[]>([]);
+
     const [subCatName, setSubCatName] = useState("");
     const [subCatDescription, setSubCatDescription] = useState("");
     const [subCatImageFile, setSubCatImageFile] = useState<File | null>(null);
 
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [dbCategories, setDbCategories] = useState<Category[]>([]);
+    const [newCatName, setNewCatName] = useState("");
+    const [newCatDescription, setNewCatDescription] = useState("");
+    const [newCatImageFile, setNewCatImageFile] = useState<File | null>(null);
+    const [isAddingnewCategory, setIsAddingnewCategory] = useState(false);
     // Loading states
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [isAddingColor, setIsAddingColor] = useState(false);
@@ -90,6 +103,14 @@ const AddProduct = () => {
                     image: (doc.data().image as string) || "",
                 }));
                 setDbSubCollections(subCollectionsData);
+                const newCategoriesdata = await getDocs(collection(db, "Categories"));
+                const categoriesData = newCategoriesdata.docs.map((doc) => ({
+                    id: doc.id,
+                    name: doc.data().name as string,
+                    description: doc.data().description as string,
+                    image: (doc.data().image as string) || "",
+                }));
+                setDbCategories(categoriesData);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setErrors((prev) => ({ ...prev, fetch: "Failed to load data" }));
@@ -159,6 +180,9 @@ const AddProduct = () => {
 
     const handleSubCatImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) setSubCatImageFile(e.target.files[0]);
+    };
+    const handleNewCatImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) setNewCatImageFile(e.target.files[0]);
     };
 
     // Color management
@@ -231,7 +255,36 @@ const AddProduct = () => {
             setIsAddingSubCategory(false);
         }
     };
-
+    const handleAddNewCategory = async () => {
+        // const subCatError = validateNewSubCategory();
+        // if (subCatError) {
+        //     setErrors((prev) => ({ ...prev, subCatName: subCatError }));
+        //     return;
+        // }
+        setIsAddingnewCategory(true);
+        try {
+            let imageUrl = "";
+            if (newCatImageFile) imageUrl = await uploadFile(newCatImageFile);
+            const newCategory = {
+                name: newCatName.trim(),
+                description: newCatDescription.trim(),
+                image: imageUrl,
+            };
+            const docRef = await addDoc(collection(db, "Categories"), newCategory);
+            const updatedCategory: Category = { id: docRef.id, ...newCategory };
+            setDbCategories([...dbCategories, updatedCategory]);
+            setCategories([...categories, updatedCategory]);
+            setNewCatName("");
+            setNewCatDescription("");
+            setNewCatImageFile(null);
+            setErrors((prev) => ({ ...prev, subCatName: "", subCategories: "" }));
+        } catch (error) {
+            console.error("Error adding sub-category:", error);
+            setErrors((prev) => ({ ...prev, subCatName: "Failed to add sub-collection" }));
+        } finally {
+            setIsAddingnewCategory(false);
+        }
+    };
     const handleSelectSubCategory = (subCatId: string) => {
         const selectedSubCat = dbSubCollections.find((sc) => sc.id === subCatId);
         if (selectedSubCat && !subCategories.some((sc) => sc.id === selectedSubCat.id)) {
@@ -414,15 +467,47 @@ const AddProduct = () => {
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>
-                                {categories.map((cat) => (
+                                {dbCategories.map((cat) => (
                                     <SelectItem key={cat.id} value={cat.id}>
-                                        {cat.name}
+                                        <img src={cat.image} alt={cat.name} className="h-[20px] w-[20px] object-cover" />
+                                        <p>{cat.name}</p>
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                         {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
                     </div>
+                    <div className="mb-4">
+                        <Input
+                            placeholder="New Category Name"
+                            value={newCatName}
+                            onChange={(e) => setNewCatName(e.target.value)}
+                            maxLength={30}
+                            className="mb-2"
+                            disabled={ isAddingnewCategory}
+
+                        />
+                        <Textarea
+                            placeholder="Category Description"
+                            value={newCatDescription}
+                            onChange={(e) => setNewCatDescription(e.target.value)}
+                            maxLength={200}
+                            rows={2}
+                            className="mb-2"
+                            disabled={isAddingnewCategory}
+                        />
+                        <Input
+                            type="file"
+                            onChange={handleNewCatImageChange}
+                            className="mb-2"
+                            required
+                            disabled={isAddingnewCategory}
+                        />
+                        <Button type="button" onClick={handleAddNewCategory} disabled={ isAddingnewCategory}>
+                            {isAddingnewCategory ? "Adding..." : "Add New Category"}
+                        </Button>
+                    </div>
+
                     <div>
                         <label htmlFor="collection" className="block mb-1 font-medium">
                             Collection:
