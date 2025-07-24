@@ -5,8 +5,8 @@ import { db } from '@/lib/firebase';
 import { collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { uploadFile } from '../add-product/page';
 import AdminDashboard from '../page';
+import { uploadFile } from '@/lib/utils';
 
 // Dummy upload function, replace with your actual logic
 // const uploadFile = async (file: File): Promise<string> => {

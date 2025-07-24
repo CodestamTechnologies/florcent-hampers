@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { useProducts } from "@/providers/productsProvider";
 import AdminDashboard from "../page";
-import { uploadFile } from "../add-product/page";
+import { uploadFile } from "@/lib/utils";
 
 type CarouselItem = {
     id: string;

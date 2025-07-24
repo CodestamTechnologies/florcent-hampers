@@ -71,7 +71,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
             {/* Category Products Section */}
-            <section className={`${allowedEmails.includes(user?.email || "") ? 'py-0' : 'py-16'}  px-6 bg-gray-50`}>
+            <section className={`py-16 px-6 bg-gray-50`}>
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
