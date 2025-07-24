@@ -124,7 +124,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
           {dbCategories.map((category) => (
             <Link
               key={category.name}
-              href={category.name.toLowerCase().replace(/\s+/g, "-")}
+              href={`/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
               className={buttonVariants({
                 variant: "ghost",
                 className: "w-full justify-start font-medium text-sm",

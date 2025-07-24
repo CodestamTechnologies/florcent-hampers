@@ -99,26 +99,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         };
         fetchData();
     }, []);
-     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setCategoriesLoaded(true);
-                const newCategoriesdata = await getDocs(collection(db, "Categories"));
-                const categoriesData = newCategoriesdata.docs.map((doc) => ({
-                    id: doc.id,
-                    name: doc.data().name as string,
-                    description: doc.data().description as string,
-                    image: (doc.data().image as string) || "",
-                }));
-                setDbCategories(categoriesData);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setCategoriesLoaded(false);
-            }
-        };
-        fetchData();
-    }, []);
+    
     // Fetch data from Firestore
     useEffect(() => {
         const fetchData = async () => {
