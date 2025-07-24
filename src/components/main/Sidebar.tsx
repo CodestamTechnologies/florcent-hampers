@@ -15,6 +15,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { useProducts } from "@/providers/productsProvider";
+import { useAuth } from "@/providers/authProvider";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   const { cartCount, favoritesCount } = useCart();
   const { dbCategories, } = useProducts();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (isOpen) toggleSidebar();
@@ -50,7 +52,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
-
+ const allowedEmails =
+    process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
 
 
   const quickLinks = [
@@ -94,7 +97,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         </div>
 
         <div className="space-y-1 p-2">
-          <Link
+         {allowedEmails.includes(user?.email || "") && <Link
             href='/admin-dashboard/all-users'
             className={buttonVariants({
               variant: "ghost",
@@ -105,7 +108,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
             <ShieldCheck className="h-4 w-4 m-3"/>
             Admin Dashboard
 
-          </Link>
+          </Link>}
           <Link
             href='/'
             className={buttonVariants({
