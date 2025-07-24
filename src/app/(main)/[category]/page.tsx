@@ -8,12 +8,9 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/providers/productsProvider";
 import { useAuth } from "@/providers/authProvider";
-import AllProduct from "@/components/Admin/All-product";
-import UserAndOrdersPage from "@/components/Admin/AllUsers";
-import AddProduct from "@/components/Admin/add-product";
-import AllProductCategory from "@/components/Admin/All-product-category";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import AdminDashboard from "@/components/Admin/admin";
 
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
@@ -107,25 +104,8 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                     </div>
                     {allowedEmails.includes(user?.email || "") && (
                         <section className="py-0 px-6 bg-white">
-                            <div className="max-w-7xl mx-auto">
-                                <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-                                    <div>
-                                        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-purple-800 mb-3 tracking-tight">
-                                            {adminpaneloptions?.name}
-                                        </h2>
-                                        <p className="text-gray-600 text-lg">
-                                            {adminpaneloptions?.description || "Manage your admin tasks efficiently"}
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
-                                    {adminpaneloptions?.name === "Add Product" && <AddProduct />}
-                                    {adminpaneloptions?.name === "All Product" && <AllProduct />}
-                                    {adminpaneloptions?.name === "Users" && <UserAndOrdersPage />}
-                                    {adminpaneloptions?.name === "All Product Category" && <AllProductCategory />}
-                                </div>
-                            </div>
+                            <AdminDashboard/>
+                            
                         </section>
                     )}
                 </div>

@@ -6,15 +6,12 @@ import Link from "next/link";
 import {
   Heart,
   LayoutDashboard,
-  Plus,
   ShoppingCart,
-  Trash,
 } from "lucide-react";
 import { useCart } from "@/providers/cartProvider";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/providers/authProvider";
 import Image from "next/image";
 import { useProducts } from "@/providers/productsProvider";
 
@@ -26,7 +23,6 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
   const { cartCount, favoritesCount } = useCart();
   const { dbCategories, } = useProducts();
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -56,7 +52,6 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
 
 
 
-  const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
   const quickLinks = [
     { name: "Favorites", icon: <Heart className="h-4 w-4 mr-2" />, count: favoritesCount, onClick: () => router.push("/favourites") },
     { name: "My Cart", icon: <ShoppingCart className="h-4 w-4 mr-2" />, count: cartCount, onClick: () => router.push("/cart") },
@@ -65,29 +60,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
 
   ];
 
-  const adminPanel = [
-    {
-      name: "Users",
-      icon: <Plus className="h-4 w-4 mr-2" />,
-      link: "/users",
-    },
 
-    {
-      name: "Add Product",
-      icon: <Plus className="h-4 w-4 mr-2" />,
-      link: "/add-product",
-    },
-    {
-      name: "All Product",
-      icon: <Trash className="h-4 w-4 mr-2" />,
-      link: "/all-product",
-    },
-    {
-      name: "All Product Category",
-      icon: <Trash className="h-4 w-4 mr-2" />,
-      link: "/all-product-category",
-    },
-  ];
   return (
     <aside
       ref={sidebarRef}
@@ -114,35 +87,8 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
           />
         </div>
         <Separator />
-        {allowedEmails.includes(user?.email || "") && (
-          <div className="px-6 pt-4">
-            <h2 className="font-semibold text-xl  tracking-tight">
-              Admin Panel
-            </h2>
-          </div>
-        )}
-        {allowedEmails.includes(user?.email || "") && (
-          <div className="space-y-1 p-2 ml-3 ">
-            {adminPanel.map((category) => (
-              <Link
-                key={category.name}
-                href={category.link}
-                className={buttonVariants({
-                  variant: "ghost",
-                  className:
-                    "w-full flex justify-start font-medium text-sm  gap-3 my-1 ",
-                })}
-              >
-                {/* <img
-                  src={category.img || ""}
-                  alt={category.name}
-                  className="w-7 h-7  object-cover rounded-full"
-                /> */}
-                <p className="">{category.name}</p>
-              </Link>
-            ))}
-          </div>
-        )}
+       
+       
         {/* Explore */}
         <div className="px-6 pt-4">
           <h2 className="font-bold text-xl text-gray-900 tracking-tight">Explore</h2>

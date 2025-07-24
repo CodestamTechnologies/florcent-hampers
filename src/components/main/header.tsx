@@ -45,7 +45,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white py-4 px-6 border-b sticky top-0 z-40">
+      <header className="bg-white py-[18px] px-6 border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
