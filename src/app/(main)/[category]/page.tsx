@@ -2,7 +2,7 @@
 
 import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { admin, Category } from "@/data";
+import {  Category } from "@/data";
 import { notFound } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,6 @@ import { useProducts } from "@/providers/productsProvider";
 import { useAuth } from "@/providers/authProvider";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import AdminDashboard from "@/components/Admin/admin";
 
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
@@ -28,7 +27,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
+            try { 
                 setCategoriesLoaded(false);
                 const newCategoriesData = await getDocs(collection(db, "Categories"));
                 const categoriesData = newCategoriesData.docs.map((doc) => ({
@@ -59,11 +58,8 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     const category = dbCategories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
-    const adminpaneloptions = admin.find(
-        (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
-    );
-
-    if (!category && !adminpaneloptions) {
+    
+    if (!category ) {
         notFound();
     }
 
@@ -102,12 +98,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                         ))}
 
                     </div>
-                    {allowedEmails.includes(user?.email || "") && (
-                        <section className="py-0 px-6 bg-white">
-                            <AdminDashboard/>
-                            
-                        </section>
-                    )}
+                    
                 </div>
             </section>
 

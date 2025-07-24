@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/providers/authProvider";
 
 import type { Order } from "@/lib/types";
+import AdminDashboard from "../page";
 
 type FirestoreUserData = {
   uid: string;
@@ -34,6 +35,8 @@ export default function UserAndOrdersPage() {
   console.log(selectedUser?.orders)
   return (
     <div className="p-6">
+            <AdminDashboard/>
+
       <h1 className="text-2xl font-bold mb-6">Users and Their Orders</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

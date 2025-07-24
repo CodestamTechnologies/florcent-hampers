@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   Heart,
   LayoutDashboard,
+  ShieldCheck,
   ShoppingCart,
 } from "lucide-react";
 import { useCart } from "@/providers/cartProvider";
@@ -56,8 +57,6 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     { name: "Favorites", icon: <Heart className="h-4 w-4 mr-2" />, count: favoritesCount, onClick: () => router.push("/favourites") },
     { name: "My Cart", icon: <ShoppingCart className="h-4 w-4 mr-2" />, count: cartCount, onClick: () => router.push("/cart") },
     { name: "Orders", icon: <LayoutDashboard className="h-4 w-4 mr-2" />, onClick: () => router.push("/orders") },
-
-
   ];
 
 
@@ -95,6 +94,18 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         </div>
 
         <div className="space-y-1 p-2">
+          <Link
+            href='/admin-dashboard/all-users'
+            className={buttonVariants({
+              variant: "ghost",
+              className: "w-full justify-start font-medium text-sm",
+            })}
+          >
+            {/* <img src={category.image} alt={category.name} className="w-6 h-6 mr-2" /> */}
+            <ShieldCheck className="h-4 w-4 m-3"/>
+            Admin Dashboard
+
+          </Link>
           <Link
             href='/'
             className={buttonVariants({
