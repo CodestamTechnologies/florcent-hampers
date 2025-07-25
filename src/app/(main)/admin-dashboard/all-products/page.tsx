@@ -39,7 +39,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Color, SubCategory } from "@/data";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
+import AdminDashboard from "../page";
 // import { Product } from "@/data";
 export interface ProductForEdit {
     id: string;
@@ -68,7 +69,7 @@ interface ProductWithId extends ProductForEdit {
 
 const AllProduct = () => {
     const [products, setProducts] = useState<ProductWithId[]>([]);
-    const [isLoadingData, setIsLoadingData] = useState(true);
+    // const [isLoadingData, setIsLoadingData] = useState(true);
     const [isDeleting, setIsDeleting] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [productToDelete, setProductToDelete] = useState<ProductWithId | null>(
@@ -85,7 +86,7 @@ const AllProduct = () => {
     const allowedEmails =
         process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
     const fetchProducts = async () => {
-        setIsLoadingData(true);
+        // setIsLoadingData(true);
         try {
             const productsSnapshot = await getDocs(collection(db, "products"));
             const productsData = productsSnapshot.docs.map((doc) => ({
@@ -97,7 +98,7 @@ const AllProduct = () => {
             console.error("Error fetching products:", error);
             setErrors((prev) => ({ ...prev, fetch: "Failed to load products" }));
         } finally {
-            setIsLoadingData(false);
+            // setIsLoadingData(false);
         }
     };
     useEffect(() => {
@@ -161,7 +162,7 @@ const AllProduct = () => {
                 description: productToEdit.description || "",
                 // colors: productToEdit.colors[0] || [],
                 quantity: productToEdit.quantity || 1,
-                images: productImageUrls.length > 0 ? productImageUrls : productToEdit.images ,
+                images: productImageUrls.length > 0 ? productImageUrls : productToEdit.images,
             });
             fetchProducts();
             setProductToEdit(null);
@@ -170,16 +171,18 @@ const AllProduct = () => {
         }
     };
 
-    if (isLoadingData) {
-        return (
-            <div className="p-4 max-w-4xl mx-auto text-center">
-                Loading products...
-            </div>
-        );
-    }
+    // if (isLoadingData) {
+    //     return (
+    //         <div className="p-4 max-w-4xl mx-auto text-center">
+    //             Loading products...
+    //         </div>
+    //     );
+    // }
 
     return (
-        <div className="p-4 max-w-5xl mx-auto">
+        <div className="p-4  mx-auto">
+            <AdminDashboard />
+
             <h1 className="text-2xl font-bold mb-4">Manage Products</h1>
             {errors.fetch && (
                 <p className="text-red-500 text-sm mb-4">{errors.fetch}</p>
@@ -312,7 +315,7 @@ const AllProduct = () => {
                                                             rows={4}
                                                         />
                                                     </div>
-                                                   
+
                                                     <div>
                                                         <Label>Quantity</Label>
                                                         <Input

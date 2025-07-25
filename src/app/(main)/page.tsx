@@ -1,7 +1,10 @@
+'use client';
 import MainComponent from "@/components/main/BannerCard";
 function App() {
   return (
-    <MainComponent />
+    <>
+      <MainComponent />
+    </>
   );
 }
 

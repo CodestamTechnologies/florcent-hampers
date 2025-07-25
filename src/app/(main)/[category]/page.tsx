@@ -2,16 +2,12 @@
 
 import ProductCard from "@/components/product-card";
 import { Button } from "@/components/ui/button";
-import { admin, Category } from "@/data";
+import {  Category } from "@/data";
 import { notFound } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/providers/productsProvider";
 import { useAuth } from "@/providers/authProvider";
-import AllProduct from "@/components/Admin/All-product";
-import UserAndOrdersPage from "@/components/Admin/AllUsers";
-import AddProduct from "@/components/Admin/add-product";
-import AllProductCategory from "@/components/Admin/All-product-category";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -31,7 +27,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
+            try { 
                 setCategoriesLoaded(false);
                 const newCategoriesData = await getDocs(collection(db, "Categories"));
                 const categoriesData = newCategoriesData.docs.map((doc) => ({
@@ -62,11 +58,8 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     const category = dbCategories.find(
         (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
     );
-    const adminpaneloptions = admin.find(
-        (cat) => cat.name.toLowerCase().replace(/\s+/g, "-") === decodedSlug
-    );
-
-    if (!category && !adminpaneloptions) {
+    
+    if (!category ) {
         notFound();
     }
 
@@ -78,7 +71,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
             {/* Category Products Section */}
-            <section className={`${allowedEmails.includes(user?.email || "") ? 'py-0' : 'py-16'}  px-6 bg-gray-50`}>
+            <section className={`py-16 px-6 bg-gray-50`}>
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-center mb-10">
                         <div>
@@ -105,29 +98,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                         ))}
 
                     </div>
-                    {allowedEmails.includes(user?.email || "") && (
-                        <section className="py-0 px-6 bg-white">
-                            <div className="max-w-7xl mx-auto">
-                                <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-                                    <div>
-                                        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-purple-800 mb-3 tracking-tight">
-                                            {adminpaneloptions?.name}
-                                        </h2>
-                                        <p className="text-gray-600 text-lg">
-                                            {adminpaneloptions?.description || "Manage your admin tasks efficiently"}
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-200">
-                                    {adminpaneloptions?.name === "Add Product" && <AddProduct />}
-                                    {adminpaneloptions?.name === "All Product" && <AllProduct />}
-                                    {adminpaneloptions?.name === "Users" && <UserAndOrdersPage />}
-                                    {adminpaneloptions?.name === "All Product Category" && <AllProductCategory />}
-                                </div>
-                            </div>
-                        </section>
-                    )}
+                    
                 </div>
             </section>
 

@@ -1,14 +1,15 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import {  Category, Product } from "@/data"; // Adjust the import path as necessary
+import { Category, Product } from "@/data"; // Adjust the import path as necessary
 import { useProducts } from "@/providers/productsProvider";
 import { Gift, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 import ProductCard from "../product-card";
 import Link from "next/link";
+import Carousel from "./Carousal";
 
 const MainComponent = () => {
-  const { products ,dbCategories} = useProducts();
+  const { products, dbCategories } = useProducts();
 
   // Group products by category
   const groupedProducts = dbCategories.reduce(
@@ -24,9 +25,13 @@ const MainComponent = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Categories Section */}
+      <div className="w-full">
+        <Carousel />
+      </div>
       <section className="py-16 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+
             <div>
               <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2 text-center">
                 Shop by Category

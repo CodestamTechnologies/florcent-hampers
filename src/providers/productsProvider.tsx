@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Category, Product,  collections } from "@/data";
+import { Category, Product, collections } from "@/data";
 
 // Types
 interface Color {
@@ -24,12 +24,20 @@ interface ProductsContextType {
     colors: Color[];
     subCollections: SubCategory[];
     dbCategories: Category[];
-    // categories: typeof categories;
+    carouselItems: CarouselItem[];
     collections: typeof collections;
     addProduct: (product: Omit<Product, "id" | "ratings">) => Promise<void>;
     uploadFile: (file: File) => Promise<string>;
     categoriesLoaded: boolean;
+    fetchCarouselItems: () => Promise<void>;
 }
+type CarouselItem = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  link: string;
+};
 
 // Context
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
@@ -55,9 +63,21 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [subCollections, setSubCollections] = useState<SubCategory[]>([]);
     const [dbCategories, setDbCategories] = useState<Category[]>([]);
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-    
+    const [carouselItems, setCarouselItems] = useState<CarouselItem[]>([]);
 
-    
+
+     const fetchCarouselItems = async () => {
+        const snapshot = await getDocs(collection(db, "Carousels"));
+        const items: CarouselItem[] = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<CarouselItem, "id">),
+        }));
+        setCarouselItems(items);
+    };
+
+    useEffect(() => {
+        fetchCarouselItems();
+    }, []);
     // Fetch colors and sub-collections from Firestore
     useEffect(() => {
         const fetchData = async () => {
@@ -79,6 +99,7 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         };
         fetchData();
     }, []);
+    
     // Fetch data from Firestore
     useEffect(() => {
         const fetchData = async () => {
@@ -144,7 +165,9 @@ export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 collections,
                 addProduct,
                 uploadFile,
-                categoriesLoaded
+                categoriesLoaded,
+                carouselItems,
+                fetchCarouselItems
             }}
         >
             {children}

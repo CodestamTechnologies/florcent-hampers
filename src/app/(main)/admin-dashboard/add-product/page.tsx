@@ -9,19 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/providers/authProvider";
+import AdminDashboard from "../page";
+import { uploadFile } from "@/lib/utils";
 
-export const uploadFile = async (file: File): Promise<string> => {
-    const apiKey = "57e5c2617e80c2dd29dc924d41564574";
-    const formData = new FormData();
-    formData.append("image", file);
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: "POST",
-        body: formData,
-    });
-    if (!response.ok) throw new Error("Upload failed");
-    const data = await response.json();
-    return data.data.url;
-};
 
 interface Color {
     id: string;
@@ -73,7 +63,7 @@ const AddProduct = () => {
     const [newCatImageFile, setNewCatImageFile] = useState<File | null>(null);
     const [isAddingnewCategory, setIsAddingnewCategory] = useState(false);
     // Loading states
-    const [isLoadingData, setIsLoadingData] = useState(true);
+    // const [isLoadingData, setIsLoadingData] = useState(true);
     const [isAddingColor, setIsAddingColor] = useState(false);
     const [isAddingSubCategory, setIsAddingSubCategory] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,7 +75,7 @@ const AddProduct = () => {
     // Fetch colors and sub-collections from Firestore
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoadingData(true);
+            // setIsLoadingData(true);
             try {
                 const colorsSnapshot = await getDocs(collection(db, "colors"));
                 const colorsData = colorsSnapshot.docs.map((doc) => ({
@@ -115,7 +105,7 @@ const AddProduct = () => {
                 console.error("Error fetching data:", error);
                 setErrors((prev) => ({ ...prev, fetch: "Failed to load data" }));
             } finally {
-                setIsLoadingData(false);
+                // setIsLoadingData(false);
             }
         };
         fetchData();
@@ -359,13 +349,13 @@ const AddProduct = () => {
     };
 
     // Render loading state for initial data fetch
-    if (isLoadingData) {
-        return (
-            <div className="p-4 max-w-4xl mx-auto text-center">
-                <p className="text-lg">Loading data...</p>
-            </div>
-        );
-    }
+    // if (isLoadingData) {
+    //     return (
+    //         <div className="p-4 max-w-4xl mx-auto text-center">
+    //             <p className="text-lg">Loading data...</p>
+    //         </div>
+    //     );
+    // }
 
     const allowedEmails = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
 
@@ -374,7 +364,9 @@ const AddProduct = () => {
     }
 
     return (
-        <div className="p-4 max-w-4xl mx-auto">
+        <div className="p-4 mx-auto">
+            <AdminDashboard/>
+
             <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
             {errors.fetch && <p className="text-red-500 text-sm mb-4">{errors.fetch}</p>}
             <form onSubmit={handleSubmit}>

@@ -18,9 +18,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ProductsProvider>
-     <main className=" md:pl-64 ">
-            {children}
-     </main>
+            <main className=" md:pl-64 ">
+              {children}
+            </main>
 
           </ProductsProvider>
           <Toaster />

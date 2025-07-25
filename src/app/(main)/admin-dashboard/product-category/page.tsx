@@ -5,7 +5,8 @@ import { db } from '@/lib/firebase';
 import { collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { uploadFile } from './add-product';
+import AdminDashboard from '../page';
+import { uploadFile } from '@/lib/utils';
 
 // Dummy upload function, replace with your actual logic
 // const uploadFile = async (file: File): Promise<string> => {
@@ -98,7 +99,9 @@ const AllProductCategory = () => {
   };
 
   return (
-    <div className="space-y-4 p-4 max-w-5xl mx-auto">
+    <div className="space-y-4 p-4  mx-auto">
+            <AdminDashboard/>
+
       <h1 className="text-2xl font-bold text-center mb-6">Manage Product Categories</h1>
 
       {dbCategories.map((category) => (
