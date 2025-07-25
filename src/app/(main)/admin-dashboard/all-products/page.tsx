@@ -36,9 +36,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Color, SubCategory } from "@/data";
+import { Color, SubCategory, Category } from "@/data";
 import { Textarea } from "@/components/ui/textarea";
 import AdminDashboard from "../page";
 // import { Product } from "@/data";
@@ -69,6 +76,7 @@ interface ProductWithId extends ProductForEdit {
 
 const AllProduct = () => {
     const [products, setProducts] = useState<ProductWithId[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     // const [isLoadingData, setIsLoadingData] = useState(true);
     const [isDeleting, setIsDeleting] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -85,6 +93,22 @@ const AllProduct = () => {
 
     const allowedEmails =
         process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(",") || [];
+
+    const fetchCategories = async () => {
+        try {
+            const categoriesSnapshot = await getDocs(collection(db, "Categories"));
+            const categoriesData = categoriesSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                name: doc.data().name as string,
+                description: doc.data().description as string,
+                image: (doc.data().image as string) || "",
+            }));
+            setCategories(categoriesData);
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+        }
+    };
+
     const fetchProducts = async () => {
         // setIsLoadingData(true);
         try {
@@ -103,6 +127,7 @@ const AllProduct = () => {
     };
     useEffect(() => {
         fetchProducts();
+        fetchCategories();
     }, []);
 
     if (!allowedEmails.includes(user?.email || "")) {
@@ -163,6 +188,7 @@ const AllProduct = () => {
                 // colors: productToEdit.colors[0] || [],
                 quantity: productToEdit.quantity || 1,
                 images: productImageUrls.length > 0 ? productImageUrls : productToEdit.images,
+                category: productToEdit.category,
             });
             fetchProducts();
             setProductToEdit(null);
@@ -197,6 +223,7 @@ const AllProduct = () => {
                             <TableHead>Title</TableHead>
                             <TableHead>Price</TableHead>
                             <TableHead>Discount</TableHead>
+                            <TableHead>Category</TableHead>
                             <TableHead>Tags</TableHead>
                             <TableHead>Action</TableHead>
                         </TableRow>
@@ -214,6 +241,7 @@ const AllProduct = () => {
                                 <TableCell>{product.title}</TableCell>
                                 <TableCell>Rs. {product.priceBeforeDiscount}</TableCell>
                                 <TableCell>{product.discount}%</TableCell>
+                                <TableCell>{product.category.name}</TableCell>
                                 <TableCell>{product.tags.join(", ")}</TableCell>
                                 <TableCell className="flex gap-2 items-center justify-center my-3">
                                     <Button
@@ -284,6 +312,46 @@ const AllProduct = () => {
                                                                 })
                                                             }
                                                         />
+                                                    </div>
+                                                    <div>
+                                                        <Label>Category</Label>
+                                                        <Select
+                                                            value={productToEdit.category.id}
+                                                            onValueChange={(value) => {
+                                                                const selectedCategory = categories.find(cat => cat.id === value);
+                                                                if (selectedCategory) {
+                                                                    setProductToEdit({
+                                                                        ...productToEdit,
+                                                                        category: {
+                                                                            id: selectedCategory.id,
+                                                                            name: selectedCategory.name
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }}
+                                                        >
+                                                            <SelectTrigger>
+                                                                <SelectValue>
+                                                                    <div className="flex items-center gap-2">
+                                                                        {productToEdit.category.name || "Select Category"}
+                                                                    </div>
+                                                                </SelectValue>
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {categories.map((category) => (
+                                                                    <SelectItem key={category.id} value={category.id}>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <img
+                                                                                src={category.image}
+                                                                                alt={category.name}
+                                                                                className="h-4 w-4 object-cover rounded"
+                                                                            />
+                                                                            {category.name}
+                                                                        </div>
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
                                                     <div>
                                                         <Label>Tags (comma separated)</Label>

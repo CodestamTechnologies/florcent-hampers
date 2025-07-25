@@ -1,4 +1,3 @@
-import Blogs from '@/components/main/blogs';
 import Footer from '@/components/main/footer';
 import Header from '@/components/main/header';
 // import Sidebar from '@/components/main/Sidebar';
@@ -17,13 +16,12 @@ const layout = ({
                 {/* <Sidebar /> */}
                 <div className="flex-1">
                     <main className="">
-                        
+
                         <ProductsProvider>
-                        <Header />
+                            <Header />
                         </ProductsProvider>
-                        
+
                         {children}
-                        <Blogs />
                         <Footer />
                     </main>
                 </div>
