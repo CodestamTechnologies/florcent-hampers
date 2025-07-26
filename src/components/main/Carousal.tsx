@@ -58,8 +58,6 @@ const Carousel = () => {
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/20 z-10" />
 
                 {/* Description and Button in Bottom-Left */}
                 <div className="absolute bottom-6 left-6 z-20 flex flex-col items-start space-y-3">
