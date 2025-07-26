@@ -7,12 +7,22 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import AdminDashboard from '../page';
 import { uploadFile } from '@/lib/utils';
-
-// Dummy upload function, replace with your actual logic
-// const uploadFile = async (file: File): Promise<string> => {
-//   // Upload logic here (Firebase Storage, etc.)
-//   return URL.createObjectURL(file); // Use actual URL from Firebase Storage
-// };
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const AllProductCategory = () => {
   const [dbCategories, setDbCategories] = useState<Category[]>([]);
@@ -23,6 +33,7 @@ const AllProductCategory = () => {
     image: '',
   });
   const [newCatImageFile, setNewCatImageFile] = useState<File | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
   const fetchData = async () => {
     try {
@@ -43,16 +54,14 @@ const AllProductCategory = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = confirm('Are you sure you want to delete this category?');
-    if (!confirmDelete) return;
-
-    toast.error('All products under this category will be deleted.');
+  const handleDelete = async (category: Category) => {
     try {
-      await deleteDoc(doc(db, 'Categories', id));
+      await deleteDoc(doc(db, 'Categories', category.id));
+      toast.success('Category deleted successfully!');
       fetchData();
     } catch (error) {
       console.error('Error deleting category:', error);
+      toast.error('Failed to delete category.');
     }
   };
 
@@ -99,96 +108,158 @@ const AllProductCategory = () => {
   };
 
   return (
-    <div className="space-y-4 p-4  mx-auto">
-            <AdminDashboard/>
+    <div className="space-y-6 p-6 mx-auto">
+      <AdminDashboard />
 
-      <h1 className="text-2xl font-bold text-center mb-6">Manage Product Categories</h1>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold tracking-tight">Manage Product Categories</h1>
+        <p className="text-muted-foreground mt-2">Edit and manage your product categories</p>
+      </div>
 
-      {dbCategories.map((category) => (
-        <div
-          key={category.id}
-          className="bg-white shadow-sm rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-4 hover:shadow-md transition-shadow duration-300"
-        >
-          <div className="flex-shrink-0">
-            <img
-              src={
-                editingId === category.id && newCatImageFile
-                  ? URL.createObjectURL(newCatImageFile)
-                  : category.image || '/placeholder.jpg'
-              }
-              alt={category.name}
-              className="h-16 w-16 rounded-full object-cover border border-gray-300"
-            />
-          </div>
+      <div className="grid gap-6">
+        {dbCategories.map((category) => (
+          <Card key={category.id} className="hover:shadow-md transition-shadow duration-300">
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-shrink-0">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage
+                      src={
+                        editingId === category.id && newCatImageFile
+                          ? URL.createObjectURL(newCatImageFile)
+                          : category.image || '/placeholder.jpg'
+                      }
+                      alt={category.name}
+                    />
+                    <AvatarFallback>{category.name[0]?.toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                </div>
 
-          {editingId === category.id ? (
-            <div className="flex-1 w-full space-y-2">
-              <input
-                name="name"
-                value={editForm.name}
-                onChange={handleChange}
-                placeholder="Category Name"
-                className="w-full border px-3 py-2 rounded text-sm"
-              />
-              <textarea
-                name="description"
-                value={editForm.description}
-                onChange={handleChange}
-                placeholder="Description"
-                className="w-full border px-3 py-2 rounded text-sm"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) setNewCatImageFile(file);
-                }}
-                className="w-full text-sm"
-              />
+                {editingId === category.id ? (
+                  <div className="flex-1 w-full space-y-4">
+                    <div>
+                      <Input
+                        name="name"
+                        value={editForm.name}
+                        onChange={handleChange}
+                        placeholder="Category Name"
+                        className="w-full"
+                      />
+                    </div>
+                    <div>
+                      <Textarea
+                        name="description"
+                        value={editForm.description}
+                        onChange={handleChange}
+                        placeholder="Description"
+                        className="w-full"
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) setNewCatImageFile(file);
+                        }}
+                        className="w-full"
+                      />
+                    </div>
 
-              <div className="flex gap-2 pt-2">
-                <button
-                  onClick={() => handleSaveEdit(category.id)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => {
-                    setEditingId(null);
-                    setNewCatImageFile(null);
-                  }}
-                  className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        onClick={() => handleSaveEdit(category.id)}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        Save Changes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setEditingId(null);
+                          setNewCatImageFile(null);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1">
+                    <CardHeader className="p-0">
+                      <CardTitle className="text-lg">{category.name}</CardTitle>
+                    </CardHeader>
+                    <p className="text-sm text-muted-foreground mt-2">{category.description}</p>
+                    {category.image && (
+                      <p className="text-xs text-muted-foreground mt-1 break-words">
+                        Image: {category.image}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {editingId !== category.id && (
+                  <div className="flex gap-2 sm:ml-auto">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditClick(category)}
+                    >
+                      Edit
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => setCategoryToDelete(category)}
+                        >
+                          Remove
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Category</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete &quot;{category.name}&quot;? This action cannot be undone.
+                            All products under this category will be affected.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel onClick={() => setCategoryToDelete(null)}>
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => {
+                              if (categoryToDelete) {
+                                handleDelete(categoryToDelete);
+                                setCategoryToDelete(null);
+                              }
+                            }}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
               </div>
-            </div>
-          ) : (
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold text-gray-800">{category.name}</h2>
-              <p className="text-sm text-gray-600">{category.description}</p>
-              <p className="text-xs text-gray-400 break-words">{category.image}</p>
-            </div>
-          )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-          <div className="flex gap-2 sm:ml-auto">
-            <button
-              onClick={() => handleEditClick(category)}
-              className="text-blue-600 hover:underline text-sm"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDelete(category.id)}
-              className="text-red-600 hover:underline text-sm"
-            >
-              Remove
-            </button>
-          </div>
-        </div>
-      ))}
+      {dbCategories.length === 0 && (
+        <Card>
+          <CardContent className="p-8 text-center">
+            <p className="text-muted-foreground">No categories found. Create your first category to get started.</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
