@@ -179,16 +179,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
           Part of:{" "}
           <span className="text-blue-600">{product?.collection?.name}</span>
         </div>
-        <div className="flex items-center justify-between mt-2 sm:mt-3  ">
+        <div className="flex flex-col-reverse items-center justify-center sm:flex-row sm:justify-between mt-2 sm:mt-3  ">
           <Button
             variant="secondary"
             size="lg"
-            className=" md:hidden whitespace-nowrap px-4 group-hover:opacity-100  transition-opacity my-2 text-xs sm:text-sm bg-blue-400 hover:bg-blue-500 text-white rounded-full  py-1"
+            className=" sm:hidden whitespace-nowrap px-4 group-hover:opacity-100  transition-opacity my-2 text-xs sm:text-sm bg-blue-400 hover:bg-blue-500 text-white rounded-full  py-1 w-full"
             onClick={() => openQuickView(product)}
           >
             Quick View
           </Button>
-          <div className="md:hidden flex  gap-4  group-hover:opacity-100 transition-opacity">
+          <div className="w-full sm:hidden flex justify-between gap-4  group-hover:opacity-100 transition-opacity">
             <Button
               size="icon"
               variant="secondary"
