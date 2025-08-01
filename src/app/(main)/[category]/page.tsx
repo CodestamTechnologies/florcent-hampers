@@ -73,7 +73,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
             {/* Category Products Section */}
             <section className={`py-16 px-6 bg-gray-50`}>
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+                    <div className="flex flex-col-reverse md:flex-row md:justify-between justify-start items-start md:items-center mb-10">
                         <div>
                             <h2 className="text-2xl md:text-3xl font-serif font-medium mb-2">{category?.name}</h2>
                             <p className="text-gray-600">{category?.description}</p>
@@ -81,7 +81,7 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
                         <Button
                             onClick={() => router.push('/')}
                             variant="outline"
-                            className="mt-4 md:mt-0"
+                            className="my-4 md:mt-0"
                         >
                             Back
                         </Button>

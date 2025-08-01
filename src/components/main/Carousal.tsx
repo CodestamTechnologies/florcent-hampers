@@ -44,7 +44,7 @@ const Carousel = () => {
                 <AnimatePresence initial={false} custom={direction}>
                     <motion.div
                         key={carouselItems[currentIndex]?.id}
-                        className="absolute w-full h-full"
+                        className="absolute inset-0 w-full h-full"
                         initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
@@ -53,10 +53,11 @@ const Carousel = () => {
                         <img
                             src={carouselItems[currentIndex]?.image}
                             alt={`Slide ${currentIndex + 1}`}
-                            className="w-full h-full object-cover"
+                            className="w-[100vw] h-full object-fill sm:object-cover object-center max-h-[90vh] sm:max-h-[600px]"
                         />
                     </motion.div>
                 </AnimatePresence>
+
 
 
                 {/* Description and Button in Bottom-Left */}
@@ -75,7 +76,7 @@ const Carousel = () => {
                     <a
                         href={carouselItems[currentIndex]?.link || "#"}
                         rel="noopener noreferrer"
-                        className="mx-4 px-4 py-2 rounded-lg font-semibold text-white backdrop-blur-xl bg-white/20 border border-gray/20 shadow-[inset_0_0_8px_rgba(255,255,255,0.3),_0_0_8px_rgba(255,255,255,0.1)] transition duration-300 hover:backdrop-blur-lg hover:bg-white/20"
+                        className="mx-4 px-2 py-1 sm:px-4 sm:py-2 rounded-lg font-semibold text-white backdrop-blur-xl bg-white/20 border border-gray/20 shadow-[inset_0_0_8px_rgba(255,255,255,0.3),_0_0_8px_rgba(255,255,255,0.1)] transition duration-300 hover:backdrop-blur-lg hover:bg-white/20"
                     >
                         {carouselItems[currentIndex]?.name || "Learn More"}
                     </a>
